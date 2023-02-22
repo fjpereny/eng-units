@@ -1,5 +1,36 @@
-use std::ops::Mul;
 
+
+use std::ops::Mul;
+use std::ops::Div;
+
+
+#[derive(Debug, Clone)]
+pub enum Unit {
+    // Lengths (metric)
+    KM,
+    M,
+    CM,
+    MM,
+    // Lengths (Imperial)
+    Inch,
+    Foot,
+    Yard,
+    Mile,
+}
+
+
+/// Converts a unit's value to the base unit value.
+/// Returns the base unit value and base unit type.
+/// Example: Unit::KM => 1,000.0, Unit::M
+fn unit_to_base_val(unit: Unit) -> (f64, Unit) {
+    match unit {
+        Unit::KM => (1_000.0, Unit::M),
+        Unit::M => (1.0, Unit::M),
+        Unit::CM => (100.0, Unit::M),
+        Unit::MM => (1.0 / 1000.0, Unit::M),
+        _ => (0.0, Unit::Mile)
+    }
+}
 
 
 #[derive(Debug, Clone)]
@@ -103,8 +134,45 @@ impl EngUnit {
             self.denominator_repeat(Fundamental::Length, count_den_length - count_num_length);
         }
 
+        if count_num_mass > count_den_mass {
+            self.numerator_repeat(Fundamental::Mass, count_num_mass - count_den_mass);
+        } else if count_den_mass > count_num_mass {
+            self.denominator_repeat(Fundamental::Mass, count_den_mass - count_num_mass);
+        }
+
+        if count_num_time > count_den_time {
+            self.numerator_repeat(Fundamental::Time, count_num_time - count_den_time);
+        } else if count_den_time > count_num_time {
+            self.denominator_repeat(Fundamental::Time, count_den_time - count_num_time);
+        }
+
+        if count_num_current > count_den_current {
+            self.numerator_repeat(Fundamental::Current, count_num_current - count_den_current);
+        } else if count_den_current > count_num_current {
+            self.denominator_repeat(Fundamental::Current, count_den_current - count_num_current);
+        }
+
+        if count_num_temp > count_den_temp {
+            self.numerator_repeat(Fundamental::Temperature, count_num_temp - count_den_temp);
+        } else if count_den_temp > count_num_temp {
+            self.denominator_repeat(Fundamental::Temperature, count_den_temp - count_num_temp);
+        }
+
+        if count_num_lumin > count_den_lumin {
+            self.numerator_repeat(Fundamental::LuminousIntensity, count_num_lumin - count_den_lumin);
+        } else if count_den_lumin > count_num_lumin {
+            self.denominator_repeat(Fundamental::LuminousIntensity, count_den_lumin - count_num_lumin);
+        }
+
+        if count_num_amount > count_den_amount {
+            self.numerator_repeat(Fundamental::AmountOfSubstance, count_num_amount - count_den_amount);
+        } else if count_den_amount > count_num_amount {
+            self.denominator_repeat(Fundamental::AmountOfSubstance, count_den_amount - count_num_amount);
+        }
+
     }
 }
+
 
 impl Mul<EngUnit> for EngUnit {
     type Output = EngUnit;
@@ -124,6 +192,43 @@ impl Mul<EngUnit> for EngUnit {
 
         let new_value = self.value * other.value;
 
-        EngUnit { numerators: new_numerators, denominators: new_denominators, value: new_value }
+        let mut new_unit = EngUnit { 
+            numerators: new_numerators, 
+            denominators: new_denominators, 
+            value: new_value 
+        };
+        new_unit.rectify_units();
+        new_unit
     }
 }
+
+
+impl Div<EngUnit> for EngUnit {
+    type Output = EngUnit;
+
+    /// Divide two units together to build a new unit
+    fn div(self, other: EngUnit) -> EngUnit {
+        
+        let mut new_numerators = self.numerators;
+        for denominator in other.denominators {
+            new_numerators.push(denominator);
+        }
+
+        let mut new_denominators = self.denominators;
+        for numerator in other.numerators {
+            new_denominators.push(numerator);
+        }
+
+        let new_value = self.value / other.value;
+
+        let mut new_unit = EngUnit { 
+            numerators: new_numerators, 
+            denominators: new_denominators, 
+            value: new_value 
+        };
+        new_unit.rectify_units();
+        new_unit 
+    }
+}
+
+

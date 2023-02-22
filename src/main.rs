@@ -19,11 +19,15 @@ fn main() {
     unit_2.denominators.push(Fundamental::Length);
     unit_2.value = 2.0;
 
-    let mut unit_3 = unit_1 * unit_2;
+    // let mut unit_3 = unit_1 * unit_2;
 
-    println!("{:?}", unit_3);
+    println!("{:?}", unit_1);
+    println!("/");
+    println!("{:?}", unit_2);
 
-    unit_3.rectify_units();
-    println!("{:?}", unit_3);
+    let unit_4 = unit_1 / unit_2;
+
+    println!("{:?}", unit_4);
+
 
 }
