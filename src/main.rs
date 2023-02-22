@@ -1,33 +1,23 @@
 
 
-use eng_units::{EngUnit, Fundamental};
+use eng_units::{EngUnit, Unit};
 
 
 fn main() {
 
-    let mut unit_1 = EngUnit::new();    
-    unit_1.numerators.push(Fundamental::Length);
-    unit_1.numerators.push(Fundamental::Length);
-    unit_1.denominators.push(Fundamental::Time);
-    unit_1.value = 5.0;
+    let mut unit_1 = EngUnit::new();
+    unit_1.value = 1.0;
+    unit_1.length_type = Unit::Kilometer;
+    unit_1.length_count = 1;
+    unit_1.length_numerator = true;
+    unit_1.time_type = Unit::Second;
+    unit_1.time_count = 2;
+    unit_1.time_numerator = false;
 
-
-    let mut unit_2 = EngUnit::new();
-    unit_2.numerators.push(Fundamental::Temperature);
-    unit_2.denominators.push(Fundamental::Length);
-    unit_2.denominators.push(Fundamental::Length);
-    unit_2.denominators.push(Fundamental::Length);
-    unit_2.value = 2.0;
-
-    // let mut unit_3 = unit_1 * unit_2;
-
-    println!("{:?}", unit_1);
-    println!("/");
-    println!("{:?}", unit_2);
-
-    let unit_4 = unit_1 / unit_2;
-
-    println!("{:?}", unit_4);
-
+    println!("{unit_1}");
+    unit_1.change_unit(Unit::Meter);
+    unit_1.change_unit(Unit::Hour);
+    println!("{unit_1}");
+    println!("{}", unit_1.unit_name());
 
 }
