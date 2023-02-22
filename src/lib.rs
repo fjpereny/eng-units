@@ -83,13 +83,13 @@ mod convs {
     // Length
     pub const KILOMETER_TO_BASE: f64 = 1_000.0;
     pub const METER_TO_BASE: f64 = 1.0;
-    pub const CENTIMETER_TO_BASE: f64 = 100.0;
+    pub const CENTIMETER_TO_BASE: f64 = 1.0 / 100.0;
     pub const MILLIMETER_TO_BASE: f64 = 1.0 / 1_000.0;
 
     // Time
     pub const SECOND_TO_BASE: f64 = 1.0;
-    pub const MINUTE_TO_BASE: f64 = 1.0 / 60.0;
-    pub const HOUR_TO_BASE: f64 = 1.0 / 3600.0;
+    pub const MINUTE_TO_BASE: f64 = 60.0;
+    pub const HOUR_TO_BASE: f64 = 3600.0;
 }
 
 
@@ -205,6 +205,44 @@ impl EngUnit {
             lumin_type: Unit::Temp,
             amount_type: Unit::Temp,
          }
+    }
+
+    pub fn from_unit(unit: Unit, val: f64) -> EngUnit {
+        let mut new_unit = EngUnit::new();
+        new_unit.value = val;        
+        let fundamental = get_fundamental(&unit);
+        match fundamental {
+            Fundamental::Length => {
+                new_unit.length_type = unit;
+                new_unit.length_count = 1;
+            },
+            Fundamental::Mass => {
+                new_unit.mass_type = unit;
+                new_unit.mass_count = 1;
+            },
+            Fundamental::Time => {
+                new_unit.time_type = unit;
+                new_unit.time_count = 1;
+            },
+            Fundamental::Current => {
+                new_unit.current_type = unit;
+                new_unit.current_count = 1;
+            },
+            Fundamental::Temperature => {
+                new_unit.temp_type = unit;
+                new_unit.temp_count = 1;
+            },
+            Fundamental::LuminousIntensity => {
+                new_unit.lumin_type = unit;
+                new_unit.lumin_count = 1;
+            },
+            Fundamental::AmountOfSubstance => {
+                new_unit.amount_type = unit;
+                new_unit.amount_count = 1;
+            },
+            
+        }
+        new_unit
     }
 
     pub fn change_unit(&mut self, unit: Unit) {
@@ -384,4 +422,50 @@ impl std::fmt::Display for EngUnit {
 
 
 
+#[cfg(test)]
+mod tests {
+    use super::*;
 
+    #[test]
+    fn length_change_m_to_km_val() {
+        let mut unit = EngUnit::from_unit(Unit::Meter, 1.0);
+        unit.change_unit(Unit::Kilometer);
+        assert_eq!(unit.value, 0.001);
+    }
+
+    #[test]
+    fn length_change_m_to_km_to_str() {
+        let mut unit = EngUnit::from_unit(Unit::Meter, 1.0);
+        unit.change_unit(Unit::Kilometer);
+        assert_eq!(unit.to_string(), "0.001 km");
+    }
+
+    #[test]
+    fn length_change_m_to_cm_val() {
+        let mut unit = EngUnit::from_unit(Unit::Meter, 1.0);
+        unit.change_unit(Unit::Centimeter);
+        assert_eq!(unit.value, 100.0);
+    }
+
+    #[test]
+    fn length_change_m_to_cm_to_str() {
+        let mut unit = EngUnit::from_unit(Unit::Meter, 1.0);
+        unit.change_unit(Unit::Centimeter);
+        assert_eq!(unit.to_string(), "100 cm");
+    }
+
+    #[test]
+    fn length_change_m_to_mm_val() {
+        let mut unit = EngUnit::from_unit(Unit::Meter, 1.0);
+        unit.change_unit(Unit::Millimeter);
+        assert_eq!(unit.value, 1000.0);
+    }
+
+    #[test]
+    fn length_change_m_to_mm_to_str() {
+        let mut unit = EngUnit::from_unit(Unit::Meter, 1.0);
+        unit.change_unit(Unit::Millimeter);
+        assert_eq!(unit.to_string(), "1000 mm");
+    }
+
+}
