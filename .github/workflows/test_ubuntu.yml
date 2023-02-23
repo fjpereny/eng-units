@@ -9,17 +9,8 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
-jobs:
-  test-win:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v3
-#     - name: Build
-#       run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
-  
-  test-ubuntu:
+jobs: 
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
