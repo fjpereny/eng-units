@@ -151,21 +151,21 @@ pub enum Fundamental {
 pub struct EngUnit {
     pub value: f64,
 
-    pub length_count: u8,
-    pub mass_count: u8,
-    pub time_count: u8,
-    pub current_count: u8,
-    pub temp_count: u8,
-    pub lumin_count: u8,
-    pub amount_count: u8,
+    pub length_count: i8,
+    pub mass_count: i8,
+    pub time_count: i8,
+    pub current_count: i8,
+    pub temp_count: i8,
+    pub lumin_count: i8,
+    pub amount_count: i8,
 
-    pub length_numerator: bool,
-    pub mass_numerator: bool,
-    pub time_numerator: bool,
-    pub current_numerator: bool,
-    pub temp_numerator: bool,
-    pub lumin_numerator: bool,
-    pub amount_numerator: bool,
+    // pub length_numerator: bool,
+    // pub mass_numerator: bool,
+    // pub time_numerator: bool,
+    // pub current_numerator: bool,
+    // pub temp_numerator: bool,
+    // pub lumin_numerator: bool,
+    // pub amount_numerator: bool,
 
     pub length_type: Unit,
     pub mass_type: Unit,
@@ -175,6 +175,7 @@ pub struct EngUnit {
     pub lumin_type: Unit,
     pub amount_type: Unit,
 }
+
 
 impl EngUnit {
     pub fn new() -> Self {
@@ -189,13 +190,13 @@ impl EngUnit {
             lumin_count: 0,
             amount_count: 0,
 
-            length_numerator: true,
-            mass_numerator: true,
-            time_numerator: true,
-            current_numerator: true,
-            temp_numerator: true,
-            lumin_numerator: true,
-            amount_numerator: true,
+            // length_numerator: true,
+            // mass_numerator: true,
+            // time_numerator: true,
+            // current_numerator: true,
+            // temp_numerator: true,
+            // lumin_numerator: true,
+            // amount_numerator: true,
 
             length_type: Unit::Meter,
             mass_type: Unit::Temp,
@@ -206,6 +207,50 @@ impl EngUnit {
             amount_type: Unit::Temp,
          }
     }
+
+    pub fn from_str(s: &str) -> Result<Self, &'static str> {
+        let mut new_unit = EngUnit::new();
+        
+        let s_split: Vec<&str> = s.split(" ").collect();
+        if s_split.len() != 2 {
+            return Err("Incorrect string format for EngUnit");
+        }
+
+        new_unit.value = s_split[0].parse::<f64>()
+            .unwrap_or_else(|err| {
+                panic!("Unable to parse numerical value\nError: {err}");
+            });    
+            
+        let num_den: Vec<&str> = s_split[1].split('/').collect();
+        if num_den.len() != 2 || num_den.len() != 1 {
+            return Err("Unable to parse numerator and denominator for units");
+        }
+
+        let num: Vec<&str> = num_den[0].split('-').collect();
+        for n in num {
+            let n_split: Vec<&str> = n.split('^').collect();
+            let unit = n_split[0];
+            let mut power: i8 = 0;
+            if n_split.len() == 1 {power = 1}
+            if n_split.len() == 2 {
+                power = n_split[1].parse::<i8>()
+                    .unwrap_or_else(|err| {
+                        panic!("Unable to parse the exponent of a unit\nError: {err}");
+                    })
+            }
+
+            match unit {
+                "m" => {
+                    new_unit.length_type = Unit::Meter;
+                    new_unit.length_count = power;
+                }
+                _ => panic!("Unknown unit type"),
+            }
+        }        
+        
+        Ok(new_unit)
+    }
+
 
     pub fn from_unit(unit: Unit, val: f64) -> EngUnit {
         let mut new_unit = EngUnit::new();
@@ -283,58 +328,33 @@ impl EngUnit {
         }
     }
 
-    fn fundamental_counts(&self) -> ([i32; 7], [i32; 7]) {
-        let mut num = [0; 7];
-        let mut den = [0; 7];
-
-        if self.length_numerator {num[0] = self.length_count as i32}
-        else {den[0] = self.length_count as i32}
-
-        if self.mass_numerator {num[1] = self.mass_count as i32}
-        else {den[1] = self.mass_count as i32}
-
-        if self.time_numerator {num[2] = self.time_count as i32}
-        else {den[2] = self.time_count as i32}
-        
-        if self.current_numerator {num[3] = self.current_count as i32}
-        else {den[3] = self.current_count as i32}
-        
-        if self.temp_numerator {num[4] = self.temp_count as i32}
-        else {den[4] = self.temp_count as i32}
-        
-        if self.lumin_numerator {num[5] = self.lumin_count as i32}
-        else {den[5] = self.lumin_count as i32}
-        
-        if self.amount_numerator {num[6] = self.amount_count as i32}
-        else {den[6] = self.amount_count as i32}
-
-        (num, den)
+    fn fundamental_counts(&self) -> [i32; 7] {
+        let counts = [
+            self.length_count as i32,
+            self.mass_count as i32,
+            self.time_count as i32,
+            self.current_count as i32,
+            self.temp_count as i32,
+            self.lumin_count as i32,
+            self.amount_count as i32,
+        ];
+        counts
     }
 
     /// Provides the name of the unit based on fundamental dimensionality
     /// Example 1: [Length] => "length"
     /// Example 2: [Length] / [Time] => "velocity"
     pub fn unit_name(&self) -> &'static str {
-        let (num, den) = self.fundamental_counts();
+        let counts = self.fundamental_counts();
 
-        match (num, den) {
-            //  [Ln Ms Ti Cr Te Lm Am]
-            (   [1, 0, 0, 0, 0, 0, 0], 
-                [0, 0, 0, 0, 0, 0, 0]) => "length",
-
-            (   [2, 0, 0, 0, 0, 0, 0], 
-                [0, 0, 0, 0, 0, 0, 0]) => "area",    
-            
-            (   [3, 0, 0, 0, 0, 0, 0], 
-                    [0, 0, 0, 0, 0, 0, 0]) => "volume",
-
-            (   [1, 0, 0, 0, 0, 0, 0], 
-                [0, 0, 1, 0, 0, 0, 0]) => "velocity",
-        
-            (   [1, 0, 0, 0, 0, 0, 0], 
-                [0, 0, 2, 0, 0, 0, 0]) => "acceleration",
+        match counts {
+        //  [Ln Ms Ti Cr Te Lm Am]
+            [1, 0, 0, 0, 0, 0, 0] => "length",
+            [2, 0, 0, 0, 0, 0, 0] => "area",                
+            [3, 0, 0, 0, 0, 0, 0] => "volume",
+            [1, 0, -1, 0, 0, 0, 0] => "velocity",
+            [1, 0, -2, 0, 0, 0, 0] => "acceleration",
     
-
             _ => "Not yet implemented...",
         }
     }
@@ -349,13 +369,13 @@ impl std::fmt::Display for EngUnit {
 
         if self.length_count >= 1 {
             let s = self.length_type.to_string();
-            match self.length_numerator {
+            match self.length_count >= 0 {
                 true => num.push_str(&s),
                 false => den.push_str(&s),
             }            
         }
         if self.length_count >= 2 {
-            match self.length_numerator {
+            match self.length_count >= 0 {
                 true => {
                     num.push('^');
                     num.push_str(&self.length_count.to_string());
@@ -369,13 +389,13 @@ impl std::fmt::Display for EngUnit {
 
         if self.mass_count >= 1 {
             let s = self.mass_type.to_string();
-            match self.length_numerator {
+            match self.mass_count >= 0 {
                 true => num.push_str(&s),
                 false => den.push_str(&s),
             }            
         }
         if self.mass_count >= 2 {
-            match self.mass_numerator {
+            match self.mass_count >= 0 {
                 true => {
                     num.push('^');
                     num.push_str(&self.mass_count.to_string());
@@ -389,13 +409,13 @@ impl std::fmt::Display for EngUnit {
 
         if self.time_count >= 1 {
             let s = self.time_type.to_string();
-            match self.time_numerator {
+            match self.time_count >= 0 {
                 true => num.push_str(&s),
                 false => den.push_str(&s),
             }            
         }
         if self.time_count >= 2 {
-            match self.time_numerator {
+            match self.time_count >= 0 {
                 true => {
                     num.push('^');
                     num.push_str(&self.time_count.to_string());
