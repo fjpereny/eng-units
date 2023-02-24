@@ -1,6 +1,6 @@
 [package]
 name = "eng-units"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "Rust library to build, calculate and convert custom engineering units."
 readme = "README.md"

@@ -16,11 +16,21 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-use std::str::FromStr;
-
 use crate::fundamental::Fundamental;
 use crate::fundamental::get_fundamental;
 use crate::conversions::convs;
+
+
+use std::ops::{
+    Add, 
+    Sub, 
+    Mul, 
+    Div, 
+    AddAssign,
+    SubAssign,
+    MulAssign,
+    DivAssign
+};
 
 
 #[derive(Debug, Clone)]
@@ -78,8 +88,17 @@ impl std::fmt::Display for Unit {
 #[derive(Debug, Clone)]
 /// A structure representing the dimensionality and value of an engineering unit.
 pub struct EngUnit {
+    // Numerical value of the unit
+    // Example: 12.7 m^2 => 12.7
     pub value: f64,
 
+    // Label for the unit (optional)
+    // Allows nice printing and organization of units
+    // Example: "Distance to my home"
+    pub label: String,
+
+    // Power of each fundamental unit
+    // Example: m^2 => length_count: 2;
     pub length_count: i8,
     pub mass_count: i8,
     pub time_count: i8,
@@ -101,6 +120,8 @@ impl EngUnit {
     pub fn new() -> Self {
         EngUnit { 
             value: 0.0,
+
+            label: String::from(""),
 
             length_count: 0,
             mass_count: 0,
@@ -169,7 +190,7 @@ impl EngUnit {
             Fundamental::Temperature => self.temp_count,
             Fundamental::LuminousIntensity => self.lumin_count,
             Fundamental::AmountOfSubstance => self.amount_count,
-        };
+        };        
         
         for _ in 0..unit_power.abs() {
             if unit_power > 0 {
@@ -183,7 +204,7 @@ impl EngUnit {
                     Fundamental::AmountOfSubstance => self.value *= unit_to_base_val(&self.amount_type),
                 }
             }
-            else {
+            else if unit_power < 0 {
                 match fundamental {
                     Fundamental::Length => self.value /= unit_to_base_val(&self.length_type),
                     Fundamental::Mass => self.value /= unit_to_base_val(&self.mass_type),
@@ -262,24 +283,42 @@ impl EngUnit {
         counts
     }
 
+    pub fn units(&self) -> String {
+        let num = self.print_numerator();
+        let den = self.print_denominator();
+
+        if num.len() > 0 && den.len() > 0 {
+            return format!("({num})/({den})");
+        } else if num.len() == 0 {
+            return format!("1/({den})");
+        } else {
+            return format!("{num}");
+        }       
+    }
+
     /// Provides the name of the unit based on fundamental dimensionality
     /// Example 1: [Length] => "length"
     /// Example 2: [Length] / [Time] => "velocity"
-    pub fn unit_name(&self) -> &'static str {
+    pub fn unit_name(&self) -> String {
         let counts = self.fundamental_counts();
 
         match counts {
         //  [Ln Ms Ti Cr Te Lm Am]
-            [1, 0, 0, 0, 0, 0, 0] => "length",
-            [2, 0, 0, 0, 0, 0, 0] => "area",                
-            [3, 0, 0, 0, 0, 0, 0] => "volume",
-            [0, 0, 1, 0, 0, 0, 0] => "time",
-            [0, 0, -1, 0, 0, 0, 0] => "frequency",
-            [1, 0, -1, 0, 0, 0, 0] => "velocity",
-            [1, 0, -2, 0, 0, 0, 0] => "acceleration",
+            [1, 0, 0, 0, 0, 0, 0] => "length".to_string(),
+            [2, 0, 0, 0, 0, 0, 0] => "area".to_string(),                
+            [3, 0, 0, 0, 0, 0, 0] => "volume".to_string(),
+            [0, 0, 1, 0, 0, 0, 0] => "time".to_string(),
+            [0, 0, -1, 0, 0, 0, 0] => "frequency".to_string(),
+            [1, 0, -1, 0, 0, 0, 0] => "velocity".to_string(),
+            [1, 0, -2, 0, 0, 0, 0] => "acceleration".to_string(),
 
-            _ => "Unknown unit.",
+            _ => self.units()
+            
         }
+    }
+
+    pub fn has_name(&self) -> bool {
+        self.units() != self.unit_name()
     }
 
     pub fn print_numerator(&self) -> String {
@@ -416,21 +455,63 @@ impl EngUnit {
 
 impl std::fmt::Display for EngUnit {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let val = &self.value;
+        let mut label = String::new();
+        if self.label != "" {
+            label.push_str(&self.label);
+            label.push_str(": ");
+        }
+        let val = self.value;
         let num = self.print_numerator();
         let den = self.print_denominator();
 
         if num.len() > 0 && den.len() > 0 {
-            return write!(f, "{val} ({num})/({den})");
+            return write!(f, "{label}{val} ({num})/({den})");
         } else if num.len() == 0 {
-            return write!(f, "{val} /({den})");
+            return write!(f, "{label}{val} /({den})");
         } else {
-            return write!(f, "{val} {num}");
-        }
-        
+            return write!(f, "{label}{val} {num}");
+        }        
     }
 }
 
+impl Add for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: Self) -> Self::Output {
+        
+        if self.length_count != rhs.length_count {
+            panic!("Tried to add incomaptible units (length)")
+        }
+        if self.mass_count != rhs.mass_count {
+            panic!("Tried to add incomaptible units (mass)")
+        }
+        if self.time_count != rhs.time_count {
+            panic!("Tried to add incomaptible units (time)")
+        }
+        if self.current_count != rhs.current_count {
+            panic!("Tried to add incomaptible units (eletric current)")
+        }
+        if self.lumin_count != rhs.lumin_count {
+            panic!("Tried to add incomaptible units (luminous intensity)")
+        }
+        if self.amount_count != rhs.amount_count {
+            panic!("Tried to add incomaptible units (amount of substance)")
+        }
+        
+        let mut new_unit = self.clone();        
+        let mut rhs_convert = rhs.clone();
+        
+        if rhs.length_count != 0 {rhs_convert.change_unit(self.length_type);}
+        if rhs.mass_count != 0 {rhs_convert.change_unit(self.mass_type);}
+        if rhs.time_count != 0 {rhs_convert.change_unit(self.time_type);}
+        if rhs.current_count != 0 {rhs_convert.change_unit(self.current_type);}
+        if rhs.temp_count != 0 {rhs_convert.change_unit(self.temp_type);}
+        if rhs.lumin_count != 0 {rhs_convert.change_unit(self.lumin_type);}
+        if rhs.amount_count != 0 {rhs_convert.change_unit(self.amount_type);}
+
+        new_unit.value = self.value + rhs_convert.value;
+        new_unit
+    }
+}
 
 /// Converts a unit's value to the base unit value.
 /// Returns the base unit value and base unit type.
