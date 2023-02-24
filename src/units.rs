@@ -16,6 +16,8 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+use std::str::FromStr;
+
 use crate::fundamental::Fundamental;
 use crate::fundamental::get_fundamental;
 use crate::conversions::convs;
@@ -118,130 +120,38 @@ impl EngUnit {
          }
     }
 
-    pub fn from_str(s: &str) -> Result<Self, &'static str> {
-        let mut new_unit = EngUnit::new();
-        
-        let s_split: Vec<&str> = s.split(" ").collect();
-        if s_split.len() != 2 {
-            return Err("Incorrect string format for EngUnit");
-        }
-
-        new_unit.value = s_split[0].parse::<f64>()
-            .unwrap_or_else(|err| {
-                panic!("Unable to parse numerical value\nError: {err}");
-            });    
-            
-        let num_den: Vec<&str> = s_split[1].split('/').collect();
-        if num_den.len() != 1 && num_den.len() != 2 {
-            return Err("Unable to parse numerator and denominator for units");
-        }
-
-        let num: Vec<&str> = num_den[0].split('-').collect();
-        let den: Vec<&str> = num_den[1].split('-').collect();
-
-        for n in num {
-            let (unit, power) = parse_unit(&n);
-            match get_fundamental(&unit) {
-                Fundamental::Length => {
-                    new_unit.length_type = unit;
-                    new_unit.length_count = power;
-                },
-                Fundamental::Mass => {
-                    new_unit.mass_type = unit;
-                    new_unit.mass_count = power;
-                }
-                Fundamental::Time => {
-                    new_unit.time_type = unit;
-                    new_unit.time_count = power;
-                }
-                Fundamental::Current => {
-                    new_unit.current_type = unit;
-                    new_unit.current_count = power;
-                }
-                Fundamental::Temperature => {
-                    new_unit.temp_type = unit;
-                    new_unit.temp_count = power;
-                }
-                Fundamental::LuminousIntensity => {
-                    new_unit.lumin_type = unit;
-                    new_unit.lumin_count = power;
-                }
-                Fundamental::AmountOfSubstance => {
-                    new_unit.amount_type = unit;
-                    new_unit.amount_count = power;
-                }
-            }
-        }
-
-        for d in den {
-            let (unit, power) = parse_unit(&d);
-            match get_fundamental(&unit) {
-                Fundamental::Length => {
-                    new_unit.length_type = unit;
-                    new_unit.length_count = -power;
-                },
-                Fundamental::Mass => {
-                    new_unit.mass_type = unit;
-                    new_unit.mass_count = -power;
-                }
-                Fundamental::Time => {
-                    new_unit.time_type = unit;
-                    new_unit.time_count = -power;
-                }
-                Fundamental::Current => {
-                    new_unit.current_type = unit;
-                    new_unit.current_count = -power;
-                }
-                Fundamental::Temperature => {
-                    new_unit.temp_type = unit;
-                    new_unit.temp_count = -power;
-                }
-                Fundamental::LuminousIntensity => {
-                    new_unit.lumin_type = unit;
-                    new_unit.lumin_count = -power;
-                }
-                Fundamental::AmountOfSubstance => {
-                    new_unit.amount_type = unit;
-                    new_unit.amount_count = -power;
-                }
-            }
-        }        
-        Ok(new_unit)
-    }
-
-
-    pub fn from_unit(unit: Unit, val: f64) -> EngUnit {
+    pub fn from_unit(val: f64, unit: Unit, power: i8) -> EngUnit {
         let mut new_unit = EngUnit::new();
         new_unit.value = val;        
         let fundamental = get_fundamental(&unit);
         match fundamental {
             Fundamental::Length => {
                 new_unit.length_type = unit;
-                new_unit.length_count = 1;
+                new_unit.length_count = power;
             },
             Fundamental::Mass => {
                 new_unit.mass_type = unit;
-                new_unit.mass_count = 1;
+                new_unit.mass_count = power;
             },
             Fundamental::Time => {
                 new_unit.time_type = unit;
-                new_unit.time_count = 1;
+                new_unit.time_count = power;
             },
             Fundamental::Current => {
                 new_unit.current_type = unit;
-                new_unit.current_count = 1;
+                new_unit.current_count = power;
             },
             Fundamental::Temperature => {
                 new_unit.temp_type = unit;
-                new_unit.temp_count = 1;
+                new_unit.temp_count = power;
             },
             Fundamental::LuminousIntensity => {
                 new_unit.lumin_type = unit;
-                new_unit.lumin_count = 1;
+                new_unit.lumin_count = power;
             },
             Fundamental::AmountOfSubstance => {
                 new_unit.amount_type = unit;
-                new_unit.amount_count = 1;
+                new_unit.amount_count = power;
             },
             
         }
@@ -305,6 +215,40 @@ impl EngUnit {
         }
     }
 
+    pub fn push_unit(&mut self, unit: Unit, power: i8) {
+        let fundamental = get_fundamental(&unit);
+        match fundamental {
+            Fundamental::Length => {
+                self.length_type = unit;
+                self.length_count = power;
+            },
+            Fundamental::Mass => {
+                self.mass_type = unit;
+                self.mass_count = power;
+            }
+            Fundamental::Time => {
+                self.time_type = unit;
+                self.time_count = power;
+            }
+            Fundamental::Current => {
+                self.current_type = unit;
+                self.current_count = power;
+            }
+            Fundamental::Temperature => {
+                self.temp_type = unit;
+                self.temp_count = power;
+            }
+            Fundamental::LuminousIntensity => {
+                self.lumin_type = unit;
+                self.lumin_count = power;
+            }
+            Fundamental::AmountOfSubstance => {
+                self.amount_type = unit;
+                self.amount_count = power;
+            }
+        }
+    }
+
     fn fundamental_counts(&self) -> [i32; 7] {
         let counts = [
             self.length_count as i32,
@@ -333,8 +277,8 @@ impl EngUnit {
             [0, 0, -1, 0, 0, 0, 0] => "frequency",
             [1, 0, -1, 0, 0, 0, 0] => "velocity",
             [1, 0, -2, 0, 0, 0, 0] => "acceleration",
-            
-            _ => "Not yet implemented...",
+
+            _ => "Unknown unit.",
         }
     }
 
@@ -520,36 +464,3 @@ pub fn get_base_unit(unit: &Unit) -> Unit {
         _ => Unit::Temp,
     }
 }
-
-pub fn parse_unit(s: &str) -> (Unit, i8) {
-    let split: Vec<&str> = s.split('^').collect();
-    let unit = parse_unit_type(split[0]);
-    
-    let mut power: i8 = 0;
-    if split.len() == 1 {power = 1}
-    if split.len() == 2 {
-        power = split[1].parse::<i8>()
-            .unwrap_or_else(|err| {
-                panic!("Unable to parse the exponent of a unit\nError: {err}");
-            })
-    }
-    (unit, power)
-}
-
-pub fn parse_unit_type(s: &str) -> Unit {
-    match s {
-        // Length
-        // Metric
-        "km" => Unit::Kilometer,
-        "m" => Unit::Meter,
-        "cm" => Unit::Centimeter,
-        "mm" => Unit::Millimeter,
-
-        // Time
-        "s" => Unit::Second,
-        "min" => Unit::Minute,
-        "hr" => Unit::Hour,
-
-        _ => panic!("Unknown unit type"),
-    }
-} 

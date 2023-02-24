@@ -28,15 +28,23 @@ fn main() {
     // let mut unit_1 = EngUnit::from_str("1 m^2").unwrap();
     // let mut unit_2 = EngUnit::from_str("3 s").unwrap();
 
-    let mut unit_3 = EngUnit::from_str("1 m/s").unwrap();
+    let unit_1 = EngUnit::from_unit(3.0, Unit::Meter, 1);
+    let mut unit_3 = unit_1.clone();
     println!("{}", unit_3);
-    
+    println!("Unit 3 is a unit of {}", unit_3.unit_name());
+
+    println!("Dividing by time...");
+    unit_3.push_unit(Unit::Second, -1);
+    println!("{}", unit_3);
+
+    println!("Changing to cm...");
     unit_3.change_unit(Unit::Centimeter);
     println!("{}", unit_3);
 
+    println!("Changing to km and hours...");
     unit_3.change_unit(Unit::Kilometer);
     unit_3.change_unit(Unit::Hour);
     println!("{}", unit_3);
 
-    println!("Unit 3 is a unit of type {}", unit_3.unit_name());
+    println!("Unit 3 is a unit of {}", unit_3.unit_name());
 }
