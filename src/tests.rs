@@ -19,7 +19,7 @@
 #[cfg(test)]
 mod tests {
     use crate::units::Unit;
-    use crate::eng_units::EngUnit;
+    use crate::units::EngUnit;
 
     #[test]
     fn length_change_m_to_km_val() {
