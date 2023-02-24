@@ -929,6 +929,178 @@ impl MulAssign<EngUnit> for EngUnit {
     }    
 }
 
+impl Div<f64> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: f64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value /= rhs;
+        new_unit
+    }
+} 
+
+impl Div<f32> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: f32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value /= rhs as f64;
+        new_unit
+    }
+} 
+
+impl Div<i64> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: i64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value /= rhs as f64;
+        new_unit
+    }
+} 
+
+impl Div<i32> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: i32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value /= rhs as f64;
+        new_unit
+    }
+} 
+
+impl Div<i16> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: i16) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value /= rhs as f64;
+        new_unit
+    }
+} 
+
+impl Div<i8> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: i8) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value /= rhs as f64;
+        new_unit
+    }
+} 
+
+impl Div<u64> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: u64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value /= rhs as f64;
+        new_unit
+    }
+} 
+
+impl Div<u32> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: u32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value /= rhs as f64;
+        new_unit
+    }
+} 
+
+impl Div<u16> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: u16) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value /= rhs as f64;
+        new_unit
+    }
+} 
+
+impl Div<u8> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: u8) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value /= rhs as f64;
+        new_unit
+    }
+} 
+
+impl Div<EngUnit> for EngUnit {
+    type Output = EngUnit;
+    fn div(self, rhs: Self) -> Self::Output {
+        let mut new_unit = self.clone();
+        let other = convert_other(&self, &rhs);
+        new_unit.value /= other.value;
+        new_unit.length_count += other.length_count;
+        new_unit.mass_count += other.mass_count;
+        new_unit.current_count += other.current_count;
+        new_unit.temp_count += other.temp_count;
+        new_unit.time_count += other.time_count;
+        new_unit.lumin_count += other.lumin_count;
+        new_unit.amount_count += other.amount_count;
+        new_unit        
+    }
+}
+
+impl DivAssign<f64> for EngUnit {
+    fn div_assign(&mut self, rhs: f64) {
+        self.value /= rhs;
+    }
+}
+impl DivAssign<f32> for EngUnit {
+    fn div_assign(&mut self, rhs: f32) {
+        self.value /= rhs as f64;
+    }
+}
+impl DivAssign<i64> for EngUnit {
+    fn div_assign(&mut self, rhs: i64) {
+        self.value /= rhs as f64;
+    }
+}
+impl DivAssign<i32> for EngUnit {
+    fn div_assign(&mut self, rhs: i32) {
+        self.value /= rhs as f64;
+    }
+}
+impl DivAssign<i16> for EngUnit {
+    fn div_assign(&mut self, rhs: i16) {
+        self.value /= rhs as f64;
+    }
+}
+impl DivAssign<i8> for EngUnit {
+    fn div_assign(&mut self, rhs: i8) {
+        self.value /= rhs as f64;
+    }
+}
+impl DivAssign<u64> for EngUnit {
+    fn div_assign(&mut self, rhs: u64) {
+        self.value /= rhs as f64;
+    }
+}
+impl DivAssign<u32> for EngUnit {
+    fn div_assign(&mut self, rhs: u32) {
+        self.value /= rhs as f64;
+    }
+}
+impl DivAssign<u16> for EngUnit {
+    fn div_assign(&mut self, rhs: u16) {
+        self.value /= rhs as f64;
+    }
+}
+impl DivAssign<u8> for EngUnit {
+    fn div_assign(&mut self, rhs: u8) {
+        self.value /= rhs as f64;
+    }
+}
+
+impl DivAssign<EngUnit> for EngUnit {
+    fn div_assign(&mut self, rhs: Self) {
+        let other = convert_other(self, &rhs);
+        self.value /= other.value;
+        self.length_count += other.length_count;
+        self.mass_count += other.mass_count;
+        self.current_count += other.current_count;
+        self.temp_count += other.temp_count;
+        self.time_count += other.time_count;
+        self.lumin_count += other.lumin_count;
+        self.amount_count += other.amount_count;
+    }    
+}
+
 
 
 fn convert_other(this: &EngUnit, other: &EngUnit) -> EngUnit {

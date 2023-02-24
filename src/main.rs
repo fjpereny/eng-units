@@ -25,15 +25,8 @@ use crate::units::EngUnit;
 
 fn main() {
 
-    let mut u1 = EngUnit::new();
-    u1.value = 5.0;
-    u1.push_unit(Unit::Kilometer, 2);
-
-    let mut u2 = EngUnit::new();
-    u2.value = 6.25;
-    u2.push_unit(Unit::Second, -2);
-
-    u1 *= u2;
-    println!("{u1}");
 
 }
+
+
+
