@@ -24,63 +24,16 @@ use crate::units::Unit;
 use crate::units::EngUnit;
 
 fn main() {
-    // println!("Let's make our first EngUnit!");
-    // let mut unit = EngUnit::new();
-    // unit.value = 9.81; // <-- Value of the unit
-    // unit.label = "Test Unit".to_string(); // <-- Optional label used for identification       
-    // unit.push_unit(Unit::Meter, 1); // <-- Pushes meter to the numerator  
-    // unit.push_unit(Unit::Second, -2); // <-- Pushes sec^2 to the denominator
-    // println!("{unit}"); // <-- It worked!
-    
-    // // unit.label;         // <-- The label used for this unit
-    // // unit.value;         // <-- The value of the unit as f64
-    // // unit.units();       // <-- String representation of the units
-    // // unit.has_name();    // <-- Checks if this unit has a known unit type
-    // // unit.unit_name();   // <-- String representation of the unit name (ex. acceleration)
 
-    // println!("{} has a common name: {}", unit.label, unit.has_name());
-    // println!("{} is a unit of {}", unit.label, unit.unit_name());    
-    // println!("{} value: {}", unit.label, unit.value);
-    // println!("{} units: {}", unit.label, unit.units());
-    // println!();
-        
-    // println!("Converting {} to km/hr^2", unit.label);
-    // unit.change_unit(Unit::Kilometer);  // <-- Changes the length unit to km
-    // unit.change_unit(Unit::Hour);       // <-- Changes the time unit to hr
-    // println!("{unit}");                 // <-- Value is calculated automatically!
+    let mut u1 = EngUnit::new();
+    u1.value = 5.0;
+    u1.push_unit(Unit::Kilometer, 2);
 
-    println!("Adding and subtracting units is easy!");
-    println!("The units don't need to be the same...");
-    println!("But they do require the same fundamental dimension!");
-    let mut unit_1 = EngUnit::new();
-    unit_1.value = 12.0;
-    unit_1.push_unit(Unit::Centimeter, 3);
+    let mut u2 = EngUnit::new();
+    u2.value = 6.25;
+    u2.push_unit(Unit::Second, -2);
 
-    let mut unit_2 = EngUnit::new();
-    unit_2.value = 40.0;
-    unit_2.push_unit(Unit::Millimeter, 3);
-
-    let mut unit_3 = unit_1.clone() + unit_2.clone();
-    unit_3.label = "Result".to_string();
-
-    println!();    
-    println!("{unit_1} + {unit_2} = {unit_3}");
-    println!();
-    println!("{} has a common name: {}", unit_3.label, unit_3.has_name());
-    println!("{} is a unit of {}", unit_3.label, unit_3.unit_name());    
-    println!("{} value: {}", unit_3.label, unit_3.value);
-    println!("{} units: {}", unit_3.label, unit_3.units());
-    println!();
-
-    println!("This will cause a panic!");
-    let mut unit_1 = EngUnit::new();
-    unit_1.value = 12.0;
-    unit_1.push_unit(Unit::Centimeter, 3);
-
-    let mut unit_2 = EngUnit::new();
-    unit_2.value = 40.0;
-    unit_2.push_unit(Unit::Millimeter, 2);
-
-    let mut unit_3 = unit_1.clone() + unit_2.clone();
+    u1 *= u2;
+    println!("{u1}");
 
 }

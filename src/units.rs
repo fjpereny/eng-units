@@ -33,7 +33,7 @@ use std::ops::{
 };
 
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub enum Unit {
     
     // Length
@@ -133,7 +133,7 @@ impl EngUnit {
 
             length_type: Unit::Meter,
             mass_type: Unit::Temp,
-            time_type: Unit::Temp,
+            time_type: Unit::Second,
             current_type: Unit::Temp,
             temp_type: Unit::Temp,
             lumin_type: Unit::Temp,
@@ -474,44 +474,477 @@ impl std::fmt::Display for EngUnit {
     }
 }
 
-impl Add for EngUnit {
+impl Add<f64> for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: f64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value += rhs;
+        new_unit
+    }
+} 
+impl Add<f32> for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: f32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value += rhs as f64;
+        new_unit
+    }
+} 
+impl Add<i64> for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: i64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value += rhs as f64;
+        new_unit
+    }
+}
+impl Add<i32> for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: i32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value += rhs as f64;
+        new_unit
+    }
+}
+impl Add<i16> for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: i16) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value += rhs as f64;
+        new_unit
+    }
+}
+impl Add<i8> for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: i8) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value += rhs as f64;
+        new_unit
+    }
+}
+impl Add<u64> for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: u64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value += rhs as f64;
+        new_unit
+    }
+}
+impl Add<u32> for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: u32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value += rhs as f64;
+        new_unit
+    }
+}
+impl Add<u16> for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: u16) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value += rhs as f64;
+        new_unit
+    }
+}
+impl Add<u8> for EngUnit {
+    type Output = EngUnit;
+    fn add(self, rhs: u8) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value += rhs as f64;
+        new_unit
+    }
+}      
+impl Add<EngUnit> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: Self) -> Self::Output {
-        
-        if self.length_count != rhs.length_count {
-            panic!("Tried to add incomaptible units (length)")
-        }
-        if self.mass_count != rhs.mass_count {
-            panic!("Tried to add incomaptible units (mass)")
-        }
-        if self.time_count != rhs.time_count {
-            panic!("Tried to add incomaptible units (time)")
-        }
-        if self.current_count != rhs.current_count {
-            panic!("Tried to add incomaptible units (eletric current)")
-        }
-        if self.lumin_count != rhs.lumin_count {
-            panic!("Tried to add incomaptible units (luminous intensity)")
-        }
-        if self.amount_count != rhs.amount_count {
-            panic!("Tried to add incomaptible units (amount of substance)")
-        }
-        
         let mut new_unit = self.clone();        
-        let mut rhs_convert = rhs.clone();
-        
-        if rhs.length_count != 0 {rhs_convert.change_unit(self.length_type);}
-        if rhs.mass_count != 0 {rhs_convert.change_unit(self.mass_type);}
-        if rhs.time_count != 0 {rhs_convert.change_unit(self.time_type);}
-        if rhs.current_count != 0 {rhs_convert.change_unit(self.current_type);}
-        if rhs.temp_count != 0 {rhs_convert.change_unit(self.temp_type);}
-        if rhs.lumin_count != 0 {rhs_convert.change_unit(self.lumin_type);}
-        if rhs.amount_count != 0 {rhs_convert.change_unit(self.amount_type);}
-
+        let rhs_convert = convert_other(&self, &rhs);
         new_unit.value = self.value + rhs_convert.value;
         new_unit
     }
 }
+impl AddAssign<f64> for EngUnit {
+    fn add_assign(&mut self, rhs: f64) {
+        self.value += rhs;
+    }
+}
+impl AddAssign<f32> for EngUnit {
+    fn add_assign(&mut self, rhs: f32) {
+        self.value += rhs as f64;
+    }
+}
+impl AddAssign<i64> for EngUnit {
+    fn add_assign(&mut self, rhs: i64) {
+        self.value += rhs as f64;
+    }
+}
+impl AddAssign<i32> for EngUnit {
+    fn add_assign(&mut self, rhs: i32) {
+        self.value += rhs as f64;
+    }
+}
+impl AddAssign<i16> for EngUnit {
+    fn add_assign(&mut self, rhs: i16) {
+        self.value += rhs as f64;
+    }
+}
+impl AddAssign<i8> for EngUnit {
+    fn add_assign(&mut self, rhs: i8) {
+        self.value += rhs as f64;
+    }
+}
+impl AddAssign<u64> for EngUnit {
+    fn add_assign(&mut self, rhs: u64) {
+        self.value += rhs as f64;
+    }
+}
+impl AddAssign<u32> for EngUnit {
+    fn add_assign(&mut self, rhs: u32) {
+        self.value += rhs as f64;
+    }
+}
+impl AddAssign<u16> for EngUnit {
+    fn add_assign(&mut self, rhs: u16) {
+        self.value += rhs as f64;
+    }
+}
+impl AddAssign<u8> for EngUnit {
+    fn add_assign(&mut self, rhs: u8) {
+        self.value += rhs as f64;
+    }
+}
+impl AddAssign<EngUnit> for EngUnit {
+    fn add_assign(&mut self, rhs: Self) {
+        let rhs_convert = convert_other(self, &rhs);
+        self.value += rhs_convert.value;
+    }    
+}
+
+
+impl Sub<f64> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: f64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value -= rhs;
+        new_unit
+    }
+} 
+impl Sub<f32> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: f32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value -= rhs as f64;
+        new_unit
+    }
+} 
+impl Sub<i64> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: i64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value -= rhs as f64;
+        new_unit
+    }
+}
+impl Sub<i32> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: i32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value -= rhs as f64;
+        new_unit
+    }
+}
+impl Sub<i16> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: i16) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value -= rhs as f64;
+        new_unit
+    }
+}
+impl Sub<i8> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: i8) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value -= rhs as f64;
+        new_unit
+    }
+}
+impl Sub<u64> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: u64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value -= rhs as f64;
+        new_unit
+    }
+}
+impl Sub<u32> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: u32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value -= rhs as f64;
+        new_unit
+    }
+}
+impl Sub<u16> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: u16) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value -= rhs as f64;
+        new_unit
+    }
+}
+impl Sub<u8> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: u8) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value -= rhs as f64;
+        new_unit
+    }
+}      
+impl Sub<EngUnit> for EngUnit {
+    type Output = EngUnit;
+    fn sub(self, rhs: Self) -> Self::Output {
+        let mut new_unit = self.clone();        
+        let rhs_convert = convert_other(&self, &rhs);
+        new_unit.value = self.value - rhs_convert.value;
+        new_unit
+    }
+}
+impl SubAssign<f64> for EngUnit {
+    fn sub_assign(&mut self, rhs: f64) {
+        self.value -= rhs;
+    }
+}
+impl SubAssign<f32> for EngUnit {
+    fn sub_assign(&mut self, rhs: f32) {
+        self.value -= rhs as f64;
+    }
+}
+impl SubAssign<i64> for EngUnit {
+    fn sub_assign(&mut self, rhs: i64) {
+        self.value -= rhs as f64;
+    }
+}
+impl SubAssign<i32> for EngUnit {
+    fn sub_assign(&mut self, rhs: i32) {
+        self.value -= rhs as f64;
+    }
+}
+impl SubAssign<i16> for EngUnit {
+    fn sub_assign(&mut self, rhs: i16) {
+        self.value -= rhs as f64;
+    }
+}
+impl SubAssign<i8> for EngUnit {
+    fn sub_assign(&mut self, rhs: i8) {
+        self.value -= rhs as f64;
+    }
+}
+impl SubAssign<u64> for EngUnit {
+    fn sub_assign(&mut self, rhs: u64) {
+        self.value -= rhs as f64;
+    }
+}
+impl SubAssign<u32> for EngUnit {
+    fn sub_assign(&mut self, rhs: u32) {
+        self.value -= rhs as f64;
+    }
+}
+impl SubAssign<u16> for EngUnit {
+    fn sub_assign(&mut self, rhs: u16) {
+        self.value -= rhs as f64;
+    }
+}
+impl SubAssign<u8> for EngUnit {
+    fn sub_assign(&mut self, rhs: u8) {
+        self.value -= rhs as f64;
+    }
+}
+impl SubAssign<EngUnit> for EngUnit {
+    fn sub_assign(&mut self, rhs: Self) {
+        let rhs_convert = convert_other(self, &rhs);
+        self.value -= rhs_convert.value;
+    }    
+}
+
+
+
+impl Mul<f64> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: f64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value *= rhs;
+        new_unit
+    }
+} 
+impl Mul<f32> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: f32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value *= rhs as f64;
+        new_unit
+    }
+} 
+impl Mul<i64> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: i64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value *= rhs as f64;
+        new_unit
+    }
+}
+impl Mul<i32> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: i32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value *= rhs as f64;
+        new_unit
+    }
+}
+impl Mul<i16> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: i16) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value *= rhs as f64;
+        new_unit
+    }
+}
+impl Mul<i8> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: i8) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value *= rhs as f64;
+        new_unit
+    }
+}
+impl Mul<u64> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: u64) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value *= rhs as f64;
+        new_unit
+    }
+}
+impl Mul<u32> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: u32) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value *= rhs as f64;
+        new_unit
+    }
+}
+impl Mul<u16> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: u16) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value *= rhs as f64;
+        new_unit
+    }
+}
+impl Mul<u8> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: u8) -> Self::Output {
+        let mut new_unit = self.clone();
+        new_unit.value *= rhs as f64;
+        new_unit
+    }
+}      
+impl Mul<EngUnit> for EngUnit {
+    type Output = EngUnit;
+    fn mul(self, rhs: Self) -> Self::Output {
+        let mut new_unit = self.clone();
+        let other = convert_other(&self, &rhs);
+        new_unit.value *= other.value;
+        new_unit.length_count += other.length_count;
+        new_unit.mass_count += other.mass_count;
+        new_unit.current_count += other.current_count;
+        new_unit.temp_count += other.temp_count;
+        new_unit.time_count += other.time_count;
+        new_unit.lumin_count += other.lumin_count;
+        new_unit.amount_count += other.amount_count;
+        new_unit        
+    }
+}
+impl MulAssign<f64> for EngUnit {
+    fn mul_assign(&mut self, rhs: f64) {
+        self.value *= rhs;
+    }
+}
+impl MulAssign<f32> for EngUnit {
+    fn mul_assign(&mut self, rhs: f32) {
+        self.value *= rhs as f64;
+    }
+}
+impl MulAssign<i64> for EngUnit {
+    fn mul_assign(&mut self, rhs: i64) {
+        self.value *= rhs as f64;
+    }
+}
+impl MulAssign<i32> for EngUnit {
+    fn mul_assign(&mut self, rhs: i32) {
+        self.value *= rhs as f64;
+    }
+}
+impl MulAssign<i16> for EngUnit {
+    fn mul_assign(&mut self, rhs: i16) {
+        self.value *= rhs as f64;
+    }
+}
+impl MulAssign<i8> for EngUnit {
+    fn mul_assign(&mut self, rhs: i8) {
+        self.value *= rhs as f64;
+    }
+}
+impl MulAssign<u64> for EngUnit {
+    fn mul_assign(&mut self, rhs: u64) {
+        self.value *= rhs as f64;
+    }
+}
+impl MulAssign<u32> for EngUnit {
+    fn mul_assign(&mut self, rhs: u32) {
+        self.value *= rhs as f64;
+    }
+}
+impl MulAssign<u16> for EngUnit {
+    fn mul_assign(&mut self, rhs: u16) {
+        self.value *= rhs as f64;
+    }
+}
+impl MulAssign<u8> for EngUnit {
+    fn mul_assign(&mut self, rhs: u8) {
+        self.value *= rhs as f64;
+    }
+}
+impl MulAssign<EngUnit> for EngUnit {
+    fn mul_assign(&mut self, rhs: Self) {
+        let other = convert_other(self, &rhs);
+        self.value *= other.value;
+        self.length_count += other.length_count;
+        self.mass_count += other.mass_count;
+        self.current_count += other.current_count;
+        self.temp_count += other.temp_count;
+        self.time_count += other.time_count;
+        self.lumin_count += other.lumin_count;
+        self.amount_count += other.amount_count;
+    }    
+}
+
+
+
+fn convert_other(this: &EngUnit, other: &EngUnit) -> EngUnit {
+    let mut other_converted = other.clone();
+        
+    if other.length_count != 0 {other_converted.change_unit(this.length_type);}
+    if other.mass_count != 0 {other_converted.change_unit(this.mass_type);}
+    if other.time_count != 0 {other_converted.change_unit(this.time_type);}
+    if other.current_count != 0 {other_converted.change_unit(this.current_type);}
+    if other.temp_count != 0 {other_converted.change_unit(this.temp_type);}
+    if other.lumin_count != 0 {other_converted.change_unit(this.lumin_type);}
+    if other.amount_count != 0 {other_converted.change_unit(this.amount_type);}
+
+    other_converted
+}
+
 
 /// Converts a unit's value to the base unit value.
 /// Returns the base unit value and base unit type.

@@ -18,8 +18,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::units::Unit;
-    use crate::units::EngUnit;
+    use crate::units::*;
 
     #[test]
     fn length_change_m_to_km_val() {
@@ -62,5 +61,161 @@ mod tests {
         unit.change_unit(Unit::Millimeter);
         assert_eq!(unit.to_string(), "1000 mm");
     }
+}
+
+#[cfg(test)]
+mod addition {
+    use crate::units::*;
+
+    #[test]
+    fn add_one_i8() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit + (1 as i8);
+        assert_eq!(unit.value, 2.0);
+    }
+
+    #[test]
+    fn add_one_i16() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit + (1 as i16);
+        assert_eq!(unit.value, 2.0);
+    }
+
+    #[test]
+    fn add_one_i32() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit + (1 as i32);
+        assert_eq!(unit.value, 2.0);
+    }
+
+    #[test]
+    fn add_one_i64() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit + (1 as i64);
+        assert_eq!(unit.value, 2.0);
+    }
+
+
+    #[test]
+    fn add_one_u8() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit + (1 as u8);
+        assert_eq!(unit.value, 2.0);
+    }
+
+    #[test]
+    fn add_one_u16() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit + (1 as u16);
+        assert_eq!(unit.value, 2.0);
+    }
+
+    #[test]
+    fn add_one_u32() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit + (1 as u32);
+        assert_eq!(unit.value, 2.0);
+    }
+
+    #[test]
+    fn add_one_u64() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit + (1 as u64);
+        assert_eq!(unit.value, 2.0);
+    }
+
+    #[test]
+    fn add_one_f32() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit + (1 as f32);
+        assert_eq!(unit.value, 2.0);
+    }
+
+    #[test]
+    fn add_one_f64() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit + (1 as f64);
+        assert_eq!(unit.value, 2.0);
+    }
+
+
+}
+
+
+#[cfg(test)]
+mod subtraction {
+    use crate::units::*;
+
+    #[test]
+    fn sub_one_i8() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit - (1 as i8);
+        assert_eq!(unit.value, 0.0);
+    }
+
+    #[test]
+    fn sub_one_i16() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit - (1 as i16);
+        assert_eq!(unit.value, 0.0);
+    }
+
+    #[test]
+    fn sub_one_i32() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit - (1 as i32);
+        assert_eq!(unit.value, 0.0);
+    }
+
+    #[test]
+    fn sub_one_i64() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit - (1 as i64);
+        assert_eq!(unit.value, 0.0);
+    }
+
+
+    #[test]
+    fn sub_one_u8() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit - (1 as u8);
+        assert_eq!(unit.value, 0.0);
+    }
+
+    #[test]
+    fn sub_one_u16() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit - (1 as u16);
+        assert_eq!(unit.value, 0.0);
+    }
+
+    #[test]
+    fn sub_one_u32() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit - (1 as u32);
+        assert_eq!(unit.value, 0.0);
+    }
+
+    #[test]
+    fn sub_one_u64() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit - (1 as u64);
+        assert_eq!(unit.value, 0.0);
+    }
+
+    #[test]
+    fn sub_one_f32() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit - (1 as f32);
+        assert_eq!(unit.value, 0.0);
+    }
+
+    #[test]
+    fn sub_one_f64() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit = unit - (1 as f64);
+        assert_eq!(unit.value, 0.0);
+    }
+
 
 }

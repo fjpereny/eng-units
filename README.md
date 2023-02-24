@@ -99,6 +99,25 @@ Result is a unit of volume
 Result value: 12.04
 Result units: cm^3
 ```
+#### AddAssign
+```rust
+println!("AddAssign operators work too!");
+let mut u1 = EngUnit::new();
+u1.value = 1.0;
+u1.push_unit(Unit::Kilometer, 1);
+
+let mut u2 = EngUnit::new();
+u2.value = 553.0;
+u2.push_unit(Unit::Meter, 1);
+
+u1 += u2;
+println!("{u1}");
+```
+#### Output
+```
+AddAssign operators work too!
+1.553 km
+```
 #### Example Error
 Adding incompatible units (different fundamental dimmension) will raise a panic!
 ```rust
