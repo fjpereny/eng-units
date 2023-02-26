@@ -44,12 +44,12 @@ pub fn get_fundamental(unit: &Unit) -> Fundamental {
     match unit {
 
         // Length
-        // (metric)
+        // Metric
         Unit::Kilometer => Fundamental::Length,
         Unit::Meter => Fundamental::Length,
         Unit::Centimeter => Fundamental::Length,
         Unit::Millimeter => Fundamental::Length,
-        // (Imperial)
+        // Imperial
         Unit::Inch => Fundamental::Length,
         Unit::Foot => Fundamental::Length,
         Unit::Yard => Fundamental::Length,

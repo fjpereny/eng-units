@@ -25,7 +25,11 @@ use crate::units::EngUnit;
 
 fn main() {
 
+    let mut u1 = EngUnit::from_unit(100.0, Unit::Kilometer, 1);
+    u1.push_unit(Unit::Hour, -1);
 
+    u1.change_unit(Unit::Mile);
+    println!("{u1}");
 }
 
 

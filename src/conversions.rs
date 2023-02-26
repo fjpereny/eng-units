@@ -21,10 +21,17 @@
 pub mod convs {
 
     // Length
+    // Metric
     pub const KILOMETER_TO_BASE: f64 = 1_000.0;
     pub const METER_TO_BASE: f64 = 1.0;
     pub const CENTIMETER_TO_BASE: f64 = 1.0 / 100.0;
     pub const MILLIMETER_TO_BASE: f64 = 1.0 / 1_000.0;
+    // Imperial
+    pub const FOOT_TO_BASE: f64 = 0.3048;
+    pub const INCH_TO_BASE: f64 = FOOT_TO_BASE / 12.0;
+    pub const YARD_TO_BASE: f64 = FOOT_TO_BASE * 3.0;
+    pub const MILE_TO_BASE: f64 = FOOT_TO_BASE * 5_280.0;
+
 
     // Time
     pub const SECOND_TO_BASE: f64 = 1.0;

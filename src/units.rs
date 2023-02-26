@@ -1125,10 +1125,16 @@ pub fn unit_to_base_val(unit: &Unit) -> f64 {
     match unit {
         
         // Length
+        // Metric
         Unit::Kilometer => convs::KILOMETER_TO_BASE,
         Unit::Meter => convs::METER_TO_BASE,
         Unit::Centimeter => convs::CENTIMETER_TO_BASE,
         Unit::Millimeter => convs::MILLIMETER_TO_BASE,
+        // Imperial
+        Unit::Foot => convs::FOOT_TO_BASE,
+        Unit::Inch => convs::INCH_TO_BASE,
+        Unit::Yard => convs::YARD_TO_BASE,
+        Unit::Mile => convs::MILE_TO_BASE,
 
         // TIme
         Unit::Second => convs::SECOND_TO_BASE,
