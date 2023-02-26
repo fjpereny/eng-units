@@ -56,11 +56,18 @@ pub fn get_fundamental(unit: &Unit) -> Fundamental {
         Unit::Mile => Fundamental::Length,
 
         // Time
+        Unit::Nanosecond => Fundamental::Time,
+        Unit::Microsecond => Fundamental::Time,
+        Unit::Millisecond => Fundamental::Time,
         Unit::Second => Fundamental::Time,
         Unit::Minute => Fundamental::Time,
         Unit::Hour => Fundamental::Time,
 
-        _ => Fundamental::Length,
+        _ => {
+            println!("WARNING: THIS UNIT FUNDAMENTAL NOT SET");
+            println!("Set fundmamental in get_fundamental!");
+            Fundamental::Length
+        }
     }
 }
 

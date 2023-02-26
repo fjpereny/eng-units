@@ -19,20 +19,18 @@
 pub mod units;
 pub mod conversions;
 pub mod fundamental;
+pub mod unit_names;
 
 use crate::units::Unit;
 use crate::units::EngUnit;
 
 fn main() {
 
-    let mut u1 = EngUnit::from_unit(1.0, Unit::Lightyear, 1);
-    // u1.push_unit(Unit::Hour, -1);
-
-    u1.change_unit(Unit::Meter);
-    println!("{u1}");
-    println!("{}", u1.value);
-    let x = u1.value / 9460730472580800.0;
+    let mut x = EngUnit::from_unit(1.0, Unit::Second, 1);
+    // dbg!(&x);
+    x.change_unit(Unit::Nanosecond);
     println!("{x}");
+    // dbg!(x);
 }
 
 

@@ -41,6 +41,9 @@ pub mod convs {
 
 
     // Time
+    pub const NANOSECOND_TO_BASE: f64 = 1.0 / 1_000_000_000.0;
+    pub const MICROSECOND_TO_BASE: f64 = 1.0 / 1_000_000.0;
+    pub const MILLISECOND_TO_BASE: f64 = 1.0 / 1_000.0;
     pub const SECOND_TO_BASE: f64 = 1.0;
     pub const MINUTE_TO_BASE: f64 = 60.0;
     pub const HOUR_TO_BASE: f64 = 3600.0;
@@ -67,6 +70,9 @@ pub fn unit_to_base_val(unit: &Unit) -> f64 {
         Unit::Lightyear => convs::LIGHTYEAR_TO_BASE,
 
         // TIme
+        Unit::Nanosecond => convs::NANOSECOND_TO_BASE,
+        Unit::Microsecond => convs::MICROSECOND_TO_BASE,
+        Unit::Millisecond => convs::MILLISECOND_TO_BASE,
         Unit::Second => convs::SECOND_TO_BASE,
         Unit::Minute => convs::MINUTE_TO_BASE,
         Unit::Hour => convs::HOUR_TO_BASE,
@@ -83,6 +89,11 @@ pub fn get_base_unit(unit: &Unit) -> Unit {
     let fundamental = get_fundamental(&unit);
     match fundamental {
         Fundamental::Length => Unit::Meter,
-        _ => Unit::Temp,
+        Fundamental::Time => Unit::Second,
+        _ => {
+            println!("NOT YET IMPLEMENTED");
+            println!("get_base_unit function is not complete!");
+            Unit::Meter
+        },
     }
 }

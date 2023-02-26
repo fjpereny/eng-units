@@ -19,6 +19,7 @@
 use crate::fundamental::Fundamental;
 use crate::fundamental::get_fundamental;
 use crate::conversions::{unit_to_base_val, base_to_unit_val};
+use crate::unit_names;
 
 
 use std::ops::{
@@ -51,6 +52,9 @@ pub enum Unit {
     Lightyear,
 
     // Time
+    Nanosecond,
+    Microsecond,
+    Millisecond,
     Second,
     Minute,
     Hour,
@@ -77,6 +81,7 @@ impl std::fmt::Display for Unit {
             Unit::Lightyear => "lightyear",
 
             // Time
+            Unit::Millisecond => "ms",
             Unit::Second => "sec",
             Unit::Minute => "min",
             Unit::Hour => "hr",
@@ -218,14 +223,14 @@ impl EngUnit {
                     Fundamental::LuminousIntensity => self.value /= unit_to_base_val(&self.lumin_type),
                     Fundamental::AmountOfSubstance => self.value /= unit_to_base_val(&self.amount_type),
                 }
-            }
+            }    
             
             if unit_power > 0 {
                 self.value *= base_to_unit_val(&unit);
             } else {
                 self.value /= base_to_unit_val(&unit);
             }
-
+        
         }
 
         match fundamental {
@@ -274,7 +279,7 @@ impl EngUnit {
         }
     }
 
-    fn fundamental_counts(&self) -> [i32; 7] {
+    pub fn fundamental_counts(&self) -> [i32; 7] {
         let counts = [
             self.length_count as i32,
             self.mass_count as i32,
@@ -300,29 +305,8 @@ impl EngUnit {
         }       
     }
 
-    /// Provides the name of the unit based on fundamental dimensionality
-    /// Example 1: [Length] => "length"
-    /// Example 2: [Length] / [Time] => "velocity"
-    pub fn unit_name(&self) -> String {
-        let counts = self.fundamental_counts();
-
-        match counts {
-        //  [Ln Ms Ti Cr Te Lm Am]
-            [1, 0, 0, 0, 0, 0, 0] => "length".to_string(),
-            [2, 0, 0, 0, 0, 0, 0] => "area".to_string(),                
-            [3, 0, 0, 0, 0, 0, 0] => "volume".to_string(),
-            [0, 0, 1, 0, 0, 0, 0] => "time".to_string(),
-            [0, 0, -1, 0, 0, 0, 0] => "frequency".to_string(),
-            [1, 0, -1, 0, 0, 0, 0] => "velocity".to_string(),
-            [1, 0, -2, 0, 0, 0, 0] => "acceleration".to_string(),
-
-            _ => self.units()
-            
-        }
-    }
-
     pub fn has_name(&self) -> bool {
-        self.units() != self.unit_name()
+        self.units() != unit_names::unit_name(&self)
     }
 
     pub fn print_numerator(&self) -> String {
