@@ -18,7 +18,7 @@
 
 use crate::fundamental::Fundamental;
 use crate::fundamental::get_fundamental;
-use crate::conversions::convs;
+use crate::conversions::{unit_to_base_val, base_to_unit_val};
 
 
 use std::ops::{
@@ -37,16 +37,18 @@ use std::ops::{
 pub enum Unit {
     
     // Length
-    // (metric)
+    // Metric
     Kilometer,
     Meter,
     Centimeter,
     Millimeter,
-    // (Imperial)
+    // Imperial
     Inch,
     Foot,
     Yard,
     Mile,
+    // Common
+    Lightyear,
 
     // Time
     Second,
@@ -61,16 +63,18 @@ impl std::fmt::Display for Unit {
         let text = match self {
 
             // Length
-            // (metric)
+            // Metric
             Unit::Kilometer => "km",
             Unit::Meter => "m",
             Unit::Centimeter => "cm",
             Unit::Millimeter => "mm",
-            // (Imperial)
+            // Imperial
             Unit::Inch => "in",
             Unit::Foot => "ft",
             Unit::Yard => "yard",
             Unit::Mile => "mile",
+            // Other
+            Unit::Lightyear => "lightyear",
 
             // Time
             Unit::Second => "sec",
@@ -1117,42 +1121,3 @@ fn convert_other(this: &EngUnit, other: &EngUnit) -> EngUnit {
     other_converted
 }
 
-
-/// Converts a unit's value to the base unit value.
-/// Returns the base unit value and base unit type.
-/// Example: Unit::KM => 1,000.0, Unit::M
-pub fn unit_to_base_val(unit: &Unit) -> f64 {
-    match unit {
-        
-        // Length
-        // Metric
-        Unit::Kilometer => convs::KILOMETER_TO_BASE,
-        Unit::Meter => convs::METER_TO_BASE,
-        Unit::Centimeter => convs::CENTIMETER_TO_BASE,
-        Unit::Millimeter => convs::MILLIMETER_TO_BASE,
-        // Imperial
-        Unit::Foot => convs::FOOT_TO_BASE,
-        Unit::Inch => convs::INCH_TO_BASE,
-        Unit::Yard => convs::YARD_TO_BASE,
-        Unit::Mile => convs::MILE_TO_BASE,
-
-        // TIme
-        Unit::Second => convs::SECOND_TO_BASE,
-        Unit::Minute => convs::MINUTE_TO_BASE,
-        Unit::Hour => convs::HOUR_TO_BASE,
-
-        _ => 0.0,
-    }
-}
-
-pub fn base_to_unit_val(unit: &Unit) -> f64 {
-    1.0 / unit_to_base_val(&unit)
-}
-
-pub fn get_base_unit(unit: &Unit) -> Unit {
-    let fundamental = get_fundamental(&unit);
-    match fundamental {
-        Fundamental::Length => Unit::Meter,
-        _ => Unit::Temp,
-    }
-}

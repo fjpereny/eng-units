@@ -25,11 +25,14 @@ use crate::units::EngUnit;
 
 fn main() {
 
-    let mut u1 = EngUnit::from_unit(100.0, Unit::Kilometer, 1);
-    u1.push_unit(Unit::Hour, -1);
+    let mut u1 = EngUnit::from_unit(1.0, Unit::Lightyear, 1);
+    // u1.push_unit(Unit::Hour, -1);
 
-    u1.change_unit(Unit::Mile);
+    u1.change_unit(Unit::Meter);
     println!("{u1}");
+    println!("{}", u1.value);
+    let x = u1.value / 9460730472580800.0;
+    println!("{x}");
 }
 
 

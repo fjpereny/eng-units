@@ -70,4 +70,10 @@ pub mod lengths {
         unit.change_unit(Unit::Mile);
         assert_eq!(unit.value, (1.0) / (0.3048) / 5280.0);
     }
+    #[test]
+    fn change_meter_to_lightyear() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
+        unit.change_unit(Unit::Lightyear);
+        assert_eq!(unit.value, 1.0 / 9_460_730_472_580_800.0);
+    }
 }
