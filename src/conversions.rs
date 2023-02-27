@@ -17,7 +17,6 @@
 
 
 
-use crate::units::*;
 use crate::fundamental::*;
 
 
@@ -38,6 +37,11 @@ pub mod convs {
     pub const MILE_TO_BASE: f64 = FOOT_TO_BASE * 5_280.0;
     // Common
     pub const LIGHTYEAR_TO_BASE: f64 = 9_460_730_472_580_800.0;
+
+
+    // Mass
+    // Metric
+    pub const KILOGRAM_TO_BASE: f64 = 1.0;
 
 
     // Time
@@ -69,7 +73,13 @@ pub fn unit_to_base_val(unit: &Unit) -> f64 {
         // Other
         Unit::Lightyear => convs::LIGHTYEAR_TO_BASE,
 
-        // TIme
+
+        // Mass
+        // Metric
+        Unit::Kilogram => convs::KILOGRAM_TO_BASE,
+
+
+        // Time
         Unit::Nanosecond => convs::NANOSECOND_TO_BASE,
         Unit::Microsecond => convs::MICROSECOND_TO_BASE,
         Unit::Millisecond => convs::MILLISECOND_TO_BASE,
@@ -77,7 +87,11 @@ pub fn unit_to_base_val(unit: &Unit) -> f64 {
         Unit::Minute => convs::MINUTE_TO_BASE,
         Unit::Hour => convs::HOUR_TO_BASE,
 
-        _ => 0.0,
+        _ => {
+            println!("UNKNOWN UNIT");
+            println!("UNIT CONVERSION CONSTANT NOT SET!");
+            0.0
+        },
     }
 }
 
@@ -89,11 +103,82 @@ pub fn get_base_unit(unit: &Unit) -> Unit {
     let fundamental = get_fundamental(&unit);
     match fundamental {
         Fundamental::Length => Unit::Meter,
+        Fundamental::Mass => Unit::Kilogram,
         Fundamental::Time => Unit::Second,
         _ => {
             println!("NOT YET IMPLEMENTED");
             println!("get_base_unit function is not complete!");
             Unit::Meter
         },
+    }
+}
+
+
+#[derive(Debug, Clone, Copy)]
+pub enum Unit {
+    
+    // Length
+    // Metric
+    Kilometer,
+    Meter,
+    Centimeter,
+    Millimeter,
+    // Imperial
+    Inch,
+    Foot,
+    Yard,
+    Mile,
+    // Common
+    Lightyear,
+
+
+    // Mass
+    // Metric
+    Kilogram,
+
+    // Time
+    Nanosecond,
+    Microsecond,
+    Millisecond,
+    Second,
+    Minute,
+    Hour,
+
+    Temp,
+}
+
+impl std::fmt::Display for Unit {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let text = match self {
+
+            // Length
+            // Metric
+            Unit::Kilometer => "km",
+            Unit::Meter => "m",
+            Unit::Centimeter => "cm",
+            Unit::Millimeter => "mm",
+            // Imperial
+            Unit::Inch => "in",
+            Unit::Foot => "ft",
+            Unit::Yard => "yard",
+            Unit::Mile => "mile",
+            // Other
+            Unit::Lightyear => "lightyear",
+
+
+            // Mass
+            // Metric
+            Unit::Kilogram => "kg",
+
+
+            // Time
+            Unit::Millisecond => "ms",
+            Unit::Second => "sec",
+            Unit::Minute => "min",
+            Unit::Hour => "hr",
+
+            _ => "Need to finish all the Unit strings",
+        };
+        write!(f, "{text}")
     }
 }

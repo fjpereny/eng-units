@@ -16,7 +16,7 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-use crate::units::Unit;
+use crate::conversions::*;
 
 
 #[derive(Debug, Clone)]
@@ -54,6 +54,8 @@ pub fn get_fundamental(unit: &Unit) -> Fundamental {
         Unit::Foot => Fundamental::Length,
         Unit::Yard => Fundamental::Length,
         Unit::Mile => Fundamental::Length,
+        // Other
+        Unit::Lightyear => Fundamental::Length,
 
         // Time
         Unit::Nanosecond => Fundamental::Time,

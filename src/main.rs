@@ -21,16 +21,15 @@ pub mod conversions;
 pub mod fundamental;
 pub mod unit_names;
 
-use crate::units::Unit;
+use crate::conversions::Unit;
 use crate::units::EngUnit;
 
 fn main() {
 
-    let mut x = EngUnit::from_unit(1.0, Unit::Second, 1);
-    // dbg!(&x);
-    x.change_unit(Unit::Nanosecond);
+    let mut x = EngUnit::from_unit(1.0, Unit::Meter, 1);
+    x.change_unit(Unit::Mile);
     println!("{x}");
-    // dbg!(x);
+
 }
 
 

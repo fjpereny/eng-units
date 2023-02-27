@@ -18,7 +18,7 @@
 
 use crate::fundamental::Fundamental;
 use crate::fundamental::get_fundamental;
-use crate::conversions::{unit_to_base_val, base_to_unit_val};
+use crate::conversions::*;
 use crate::unit_names;
 
 
@@ -32,66 +32,6 @@ use std::ops::{
     MulAssign,
     DivAssign
 };
-
-
-#[derive(Debug, Clone, Copy)]
-pub enum Unit {
-    
-    // Length
-    // Metric
-    Kilometer,
-    Meter,
-    Centimeter,
-    Millimeter,
-    // Imperial
-    Inch,
-    Foot,
-    Yard,
-    Mile,
-    // Common
-    Lightyear,
-
-    // Time
-    Nanosecond,
-    Microsecond,
-    Millisecond,
-    Second,
-    Minute,
-    Hour,
-
-    Temp,
-}
-
-impl std::fmt::Display for Unit {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let text = match self {
-
-            // Length
-            // Metric
-            Unit::Kilometer => "km",
-            Unit::Meter => "m",
-            Unit::Centimeter => "cm",
-            Unit::Millimeter => "mm",
-            // Imperial
-            Unit::Inch => "in",
-            Unit::Foot => "ft",
-            Unit::Yard => "yard",
-            Unit::Mile => "mile",
-            // Other
-            Unit::Lightyear => "lightyear",
-
-            // Time
-            Unit::Millisecond => "ms",
-            Unit::Second => "sec",
-            Unit::Minute => "min",
-            Unit::Hour => "hr",
-
-            _ => "Need to finish all the Unit strings",
-        };
-        write!(f, "{text}")
-    }
-}
-
 
 
 #[derive(Debug, Clone)]

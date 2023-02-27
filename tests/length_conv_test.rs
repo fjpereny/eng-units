@@ -17,10 +17,13 @@
 
 
 use eng_units::*;
+use conversions::*;
+use units::*;
+
 
 #[cfg(test)]
 pub mod lengths {
-    use crate::units::*;
+   use super::*;
 
     #[test]
     fn length_change_m_to_m_val() {
@@ -68,7 +71,7 @@ pub mod lengths {
     fn change_meter_to_mile() {
         let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
         unit.change_unit(Unit::Mile);
-        assert_eq!(unit.value, (1.0) / (0.3048) / 5280.0);
+        assert_eq!(unit.value, 1.0 / 0.3048 / 5_280.0);
     }
     #[test]
     fn change_meter_to_lightyear() {
