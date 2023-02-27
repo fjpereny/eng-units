@@ -32,10 +32,22 @@ pub mod lengths {
         assert_eq!(unit.value, 1.0);
     }
     #[test]
+    fn length_change_m_to_m_val_den() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, -1);
+        unit.change_unit(Unit::Meter);
+        assert_eq!(unit.value, 1.0);
+    }
+    #[test]
     fn length_change_m_to_km_val() {
         let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
         unit.change_unit(Unit::Kilometer);
         assert_eq!(unit.value, 0.001);
+    }
+    #[test]
+    fn length_change_m_to_km_val_den() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, -1);
+        unit.change_unit(Unit::Kilometer);
+        assert_eq!(unit.value, 1.0 / 0.001);
     }
     #[test]
     fn length_change_m_to_cm_val() {
@@ -44,10 +56,22 @@ pub mod lengths {
         assert_eq!(unit.value, 100.0);
     }
     #[test]
+    fn length_change_m_to_cm_val_den() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, -1);
+        unit.change_unit(Unit::Centimeter);
+        assert_eq!(unit.value, 1.0 / 100.0);
+    }
+    #[test]
     fn length_change_m_to_mm_val() {
         let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
         unit.change_unit(Unit::Millimeter);
         assert_eq!(unit.value, 1000.0);
+    }
+    #[test]
+    fn length_change_m_to_mm_val_den() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, -1);
+        unit.change_unit(Unit::Millimeter);
+        assert_eq!(unit.value, 1.0 / 1000.0);
     }
     #[test]
     fn change_meter_to_feet() {
@@ -56,16 +80,34 @@ pub mod lengths {
         assert_eq!(unit.value, (1.0) / (0.3048));
     }
     #[test]
+    fn change_meter_to_feet_den() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, -1);
+        unit.change_unit(Unit::Foot);
+        assert_eq!(unit.value, 1.0 / (1.0 / 0.3048));
+    }
+    #[test]
     fn change_meter_to_inch() {
         let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
         unit.change_unit(Unit::Inch);
         assert_eq!(unit.value, (1.0) / (0.3048) * 12.0);
     }
     #[test]
+    fn change_meter_to_inch_den() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, -1);
+        unit.change_unit(Unit::Inch);
+        assert_eq!(unit.value, 0.3048 / 12.0);
+    }
+    #[test]
     fn change_meter_to_yard() {
         let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
         unit.change_unit(Unit::Yard);
-        assert_eq!(unit.value, (1.0) / (0.3048) / 3.0);
+        assert_eq!(unit.value, 1.0 / 0.3048 / 3.0);
+    }
+    #[test]
+    fn change_meter_to_yard_den() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, -1);
+        unit.change_unit(Unit::Yard);
+        assert_eq!(unit.value, 1.0 / (1.0 / 0.3048 / 3.0));
     }
     #[test]
     fn change_meter_to_mile() {
@@ -74,9 +116,21 @@ pub mod lengths {
         assert_eq!(unit.value, 1.0 / 0.3048 / 5_280.0);
     }
     #[test]
+    fn change_meter_to_mile_den() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, -1);
+        unit.change_unit(Unit::Mile);
+        assert_eq!(unit.value, 0.3048 * 5_280.0);
+    }
+    #[test]
     fn change_meter_to_lightyear() {
         let mut unit = EngUnit::from_unit(1.0, Unit::Meter, 1);
         unit.change_unit(Unit::Lightyear);
         assert_eq!(unit.value, 1.0 / 9_460_730_472_580_800.0);
+    }
+    #[test]
+    fn change_meter_to_lightyear_den() {
+        let mut unit = EngUnit::from_unit(1.0, Unit::Meter, -1);
+        unit.change_unit(Unit::Lightyear);
+        assert_eq!(unit.value, 9_460_730_472_580_800.0);
     }
 }
