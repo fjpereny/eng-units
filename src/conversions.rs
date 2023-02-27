@@ -51,7 +51,40 @@ pub mod convs {
     pub const SECOND_TO_BASE: f64 = 1.0;
     pub const MINUTE_TO_BASE: f64 = 60.0;
     pub const HOUR_TO_BASE: f64 = 3600.0;
+    
 }
+
+
+pub fn temp_to_K(value: f64, temp: &Unit) -> f64 {
+    match temp {
+        Unit::Kelvin => value,
+        Unit::Rankine => 5.0 / 9.0 * value,
+        Unit::Celcius => -273.15 + value,
+        Unit::Fahrenheit => {
+            (value + 32.0) / 1.80 - 273.15
+        },
+        _ => {
+            println!("Invalid temperature unit!");
+            0.0
+        }
+    }
+}
+
+pub fn K_to_temp(value: f64, temp: &Unit) -> f64 {
+    match temp {
+        Unit::Kelvin => value,
+        Unit::Rankine => value * 9.0 / 5.0,
+        Unit::Celcius => value + 273.15,
+        Unit::Fahrenheit => {
+            (value + 273.15) * 9.0 / 5.0 - 32.0
+        },
+        _ => {
+            println!("Invalid temperature unit!");
+            0.0
+        }
+    }
+}
+
 
 /// Converts a unit's value to the base unit value.
 /// Returns the base unit value and base unit type.
@@ -131,7 +164,6 @@ pub enum Unit {
     // Common
     Lightyear,
 
-
     // Mass
     // Metric
     Kilogram,
@@ -143,6 +175,13 @@ pub enum Unit {
     Second,
     Minute,
     Hour,
+
+    // Temperature
+    Kelvin,
+    Rankine,
+    Celcius,
+    Fahrenheit,
+
 
     Temp,
 }
@@ -176,6 +215,12 @@ impl std::fmt::Display for Unit {
             Unit::Second => "sec",
             Unit::Minute => "min",
             Unit::Hour => "hr",
+
+            // Temperature
+            Unit::Kelvin => "K",
+            Unit::Rankine => "°R",
+            Unit::Celcius => "°C",
+            Unit::Fahrenheit => "°F",
 
             _ => "Need to finish all the Unit strings",
         };

@@ -57,6 +57,12 @@ pub fn get_fundamental(unit: &Unit) -> Fundamental {
         // Other
         Unit::Lightyear => Fundamental::Length,
 
+
+        // Mass
+        // Metric
+        Unit::Kilogram => Fundamental::Mass,
+
+
         // Time
         Unit::Nanosecond => Fundamental::Time,
         Unit::Microsecond => Fundamental::Time,
@@ -64,6 +70,13 @@ pub fn get_fundamental(unit: &Unit) -> Fundamental {
         Unit::Second => Fundamental::Time,
         Unit::Minute => Fundamental::Time,
         Unit::Hour => Fundamental::Time,
+
+        // Temperature
+        Unit::Kelvin => Fundamental::Temperature,
+        Unit::Rankine => Fundamental::Temperature,
+        Unit::Celcius => Fundamental::Temperature,
+        Unit::Fahrenheit => Fundamental::Temperature,
+
 
         _ => {
             println!("WARNING: THIS UNIT FUNDAMENTAL NOT SET");

@@ -21,28 +21,19 @@ pub mod conversions;
 pub mod fundamental;
 pub mod unit_names;
 
-use crate::conversions::Unit;
+use crate::conversions::{Unit, K_to_temp};
 use crate::units::EngUnit;
 
 fn main() {
 
-    let mut x = EngUnit::from_unit(1.0, Unit::Meter, 1);
-    x.push_unit(Unit::Second, -2);
-    println!("{x}");
-    x *= 9.81;
-    x.label = "Gravity".to_string();
-    println!("{x} is a unit of {}", x.unit_name());
+    let t1 = EngUnit::from_unit(1.0, Unit::Celcius, 1);
 
-    let mut y = EngUnit::from_unit(2.73, Unit::Foot, 1);
-    y.push_unit(Unit::Second, -2);
-    println!("{y}");
+    let x = conversions::temp_to_K(1.0, &Unit::Kelvin);
+    println!("{}", &x);
 
-    let mut z = x + y;
-    z.label = "New Acc.".to_string();
-    println!("{z}");
+    let y = K_to_temp(x, &Unit::Kelvin);
+    println!("{y}")
 
-    z.change_unit(Unit::Inch);
-    println!("{z}");
 }
 
 
