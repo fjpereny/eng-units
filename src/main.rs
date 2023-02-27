@@ -27,9 +27,22 @@ use crate::units::EngUnit;
 fn main() {
 
     let mut x = EngUnit::from_unit(1.0, Unit::Meter, 1);
-    x.change_unit(Unit::Mile);
+    x.push_unit(Unit::Second, -2);
     println!("{x}");
+    x *= 9.81;
+    x.label = "Gravity".to_string();
+    println!("{x} is a unit of {}", x.unit_name());
 
+    let mut y = EngUnit::from_unit(2.73, Unit::Foot, 1);
+    y.push_unit(Unit::Second, -2);
+    println!("{y}");
+
+    let mut z = x + y;
+    z.label = "New Acc.".to_string();
+    println!("{z}");
+
+    z.change_unit(Unit::Inch);
+    println!("{z}");
 }
 
 

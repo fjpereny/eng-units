@@ -378,6 +378,10 @@ impl EngUnit {
         den
     }
 
+    pub fn unit_name(&self) -> String {
+        unit_names::unit_name(&self)
+    }
+
 
 }
 
