@@ -27,17 +27,13 @@ use crate::units::EngUnit;
 
 fn main() {
 
-    let mut u1 = EngUnit::from_unit(1.0, Unit::Newton, 2);
-
-    let mut u2 = EngUnit::from_unit(0.3, Unit::Newton, -1);
-    println!("{u2}");
-
-    u2.inverse();
-    println!("{}", u2.unit_name());
-
-    // u1 *= u2;
-
-    // println!("{u1}");
+    let mut u1 = EngUnit::from_unit(1.0, Unit::Slug, 1);
+    u1.push_unit(Unit::Hour, -1);
+    println!("{u1}");
+    
+    u1.change_unit(Unit::PoundMass);
+    u1.change_unit(Unit::Minute);
+    println!("{u1}");
 
 }
 

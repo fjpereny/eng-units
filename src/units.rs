@@ -88,7 +88,7 @@ impl EngUnit {
             amount_count: 0,
 
             length_type: Unit::Meter,
-            mass_type: Unit::Temp,
+            mass_type: Unit::Kilogram,
             time_type: Unit::Second,
             current_type: Unit::Temp,
             temp_type: Unit::Temp,

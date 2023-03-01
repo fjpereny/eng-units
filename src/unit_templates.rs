@@ -37,8 +37,47 @@ pub fn get_template(unit: Unit) -> (Vec<Unit>, Vec<Unit>) {
     let mut num: Vec<Unit> = Vec::new();
     let mut den: Vec<Unit> = Vec::new();
     match unit {
-        Unit::Meter => num.push(Unit::Meter),
+        // Length
+        // Metric
         Unit::Kilometer => num.push(Unit::Kilometer),
+        Unit::Meter => num.push(Unit::Meter),
+        Unit::Centimeter => num.push(Unit::Centimeter),
+        Unit::Millimeter => num.push(Unit::Millimeter),
+        //  Imperial
+        Unit::Inch => num.push(Unit::Inch),
+        Unit::Foot => num.push(Unit::Foot),
+        Unit::Yard => num.push(Unit::Yard),
+        Unit::Mile => num.push(Unit::Mile),
+        // Other
+        Unit::Lightyear => num.push(Unit::Lightyear),
+
+
+        // Mass
+        // Metric
+        Unit::Kilogram => num.push(Unit::Kilogram),
+        Unit::Gram => num.push(Unit::Gram),
+        // Imperial
+        Unit::PoundMass => num.push(Unit::PoundMass),
+        Unit::Slug => num.push(Unit::Slug),
+
+
+        // Time
+        Unit::Second => num.push(Unit::Second),
+        Unit::Minute => num.push(Unit::Minute),
+        Unit::Hour => num.push(Unit::Hour),
+
+
+        // Temperature
+        Unit::Kelvin => num.push(Unit::Kelvin),
+        Unit::Rankine => num.push(Unit::Rankine),
+        Unit::Celcius => num.push(Unit::Celcius),
+        Unit::Fahrenheit => num.push(Unit::Fahrenheit),
+        // Change in Temperature
+        Unit::KelvinChange => num.push(Unit::KelvinChange),
+        Unit::RankineChange => num.push(Unit::RankineChange),
+        Unit::CelciusChange => num.push(Unit::CelciusChange),
+        Unit::FahrenheitChange => num.push(Unit::FahrenheitChange),
+
 
         Unit::Newton => {
             num.push(Unit::Kilogram);

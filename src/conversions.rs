@@ -42,6 +42,10 @@ pub mod convs {
     // Mass
     // Metric
     pub const KILOGRAM_TO_BASE: f64 = 1.0;
+    pub const GRAM_TO_BASE: f64 = 0.001;
+    // Imperial
+    pub const POUNDMASS_TO_BASE: f64 = 0.45359237;
+    pub const SLUG_TO_BASE: f64 = 14.593902937;
 
 
     // Time
@@ -116,6 +120,10 @@ pub fn unit_to_base_val(unit: &Unit) -> f64 {
         // Mass
         // Metric
         Unit::Kilogram => convs::KILOGRAM_TO_BASE,
+        Unit::Gram => convs::GRAM_TO_BASE,
+        // Imperial
+        Unit::PoundMass => convs::POUNDMASS_TO_BASE,
+        Unit::Slug => convs::SLUG_TO_BASE,
 
 
         // Time
@@ -180,6 +188,10 @@ pub enum Unit {
     // Mass
     // Metric
     Kilogram,
+    Gram,
+    // Imperial
+    PoundMass,
+    Slug,
 
     // Time
     Nanosecond,
@@ -228,6 +240,10 @@ impl std::fmt::Display for Unit {
             // Mass
             // Metric
             Unit::Kilogram => "kg",
+            Unit::Gram => "g",
+            // Imperial
+            Unit::PoundMass => "lbm",
+            Unit::Slug => "slug",
 
 
             // Time
