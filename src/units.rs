@@ -20,6 +20,7 @@ use crate::fundamental::Fundamental;
 use crate::fundamental::get_fundamental;
 use crate::conversions::*;
 use crate::unit_names;
+use crate::unit_templates;
 
 
 use std::ops::{
@@ -97,6 +98,10 @@ impl EngUnit {
     }
 
     pub fn from_unit(val: f64, unit: Unit, power: i8) -> EngUnit {
+        unit_templates::build_unit(val, unit, power)        
+    }
+
+    pub fn from_base(val: f64, unit: Unit, power: i8) -> EngUnit {
         let mut new_unit = EngUnit::new();
         new_unit.value = val;        
         let fundamental = get_fundamental(&unit);
@@ -132,6 +137,17 @@ impl EngUnit {
             
         }
         new_unit
+    }
+
+    pub fn inverse(&mut self) {
+        self.value = 1.0 / self.value;
+        self.length_count *= -1;
+        self.mass_count *= -1;
+        self.time_count *= -1;
+        self.temp_count *= -1;
+        self.current_count *= -1;
+        self.lumin_count *= -1;
+        self.amount_count *= -1;
     }
 
     pub fn change_unit(&mut self, unit: Unit) {
@@ -196,31 +212,31 @@ impl EngUnit {
         match fundamental {
             Fundamental::Length => {
                 self.length_type = unit;
-                self.length_count = power;
+                self.length_count += power;
             },
             Fundamental::Mass => {
                 self.mass_type = unit;
-                self.mass_count = power;
+                self.mass_count += power;
             }
             Fundamental::Time => {
                 self.time_type = unit;
-                self.time_count = power;
+                self.time_count += power;
             }
             Fundamental::Current => {
                 self.current_type = unit;
-                self.current_count = power;
+                self.current_count += power;
             }
             Fundamental::Temperature => {
                 self.temp_type = unit;
-                self.temp_count = power;
+                self.temp_count += power;
             }
             Fundamental::LuminousIntensity => {
                 self.lumin_type = unit;
-                self.lumin_count = power;
+                self.lumin_count += power;
             }
             Fundamental::AmountOfSubstance => {
                 self.amount_type = unit;
-                self.amount_count = power;
+                self.amount_count += power;
             }
         }
     }

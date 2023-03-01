@@ -20,18 +20,24 @@ pub mod units;
 pub mod conversions;
 pub mod fundamental;
 pub mod unit_names;
+pub mod unit_templates;
 
 use crate::conversions::*;
 use crate::units::EngUnit;
 
 fn main() {
 
-    let mut u1 = EngUnit::from_unit(1.0, Unit::Meter, 1);
+    let mut u1 = EngUnit::from_unit(1.0, Unit::Newton, 2);
 
-    let x = 12.7 as f32;
+    let mut u2 = EngUnit::from_unit(0.3, Unit::Newton, -1);
+    println!("{u2}");
 
-    u1 += x;
-    println!("{u1}");
+    u2.inverse();
+    println!("{}", u2.unit_name());
+
+    // u1 *= u2;
+
+    // println!("{u1}");
 
 }
 

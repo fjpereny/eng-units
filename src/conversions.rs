@@ -200,6 +200,9 @@ pub enum Unit {
     CelciusChange,
     FahrenheitChange,
 
+    // Force
+    Newton,
+
     Temp,
 }
 
