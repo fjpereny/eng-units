@@ -455,10 +455,12 @@ impl std::fmt::Display for EngUnit {
 
         if !num.is_empty() && !den.is_empty() {
             write!(f, "{label}{val} ({num})/({den})")
-        } else if num.is_empty() {
+        } else if num.is_empty() && !den.is_empty() {
             write!(f, "{label}{val} /({den})")
-        } else {
+        } else if !num.is_empty() {
             write!(f, "{label}{val} {num}")
+        } else {
+            write!(f, "{label}{val}")
         }        
     }
 }

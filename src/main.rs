@@ -27,9 +27,18 @@ use crate::units::EngUnit;
 
 fn main() {
 
-    let mut u1 = EngUnit::from_unit(100.0, Unit::Newton, 1);
-    u1.inverse();
+    let mut u1 = EngUnit::from_unit(1.0, Unit::Newton, 1);
+    let m = EngUnit::from_unit(1.0, Unit::Meter, 1);
+
+    u1 *= m;
+
     println!("{u1}");
+
+    let j = EngUnit::from_unit(1.0, Unit::Joule, 1);
+
+    let x = u1 / j;
+    println!("{x}");
+
 }
 
 
