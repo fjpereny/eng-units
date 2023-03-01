@@ -60,11 +60,14 @@ pub fn get_fundamental(unit: &Unit) -> Fundamental {
 
         // Mass
         // Metric
+        Unit::MetricTonne => Fundamental::Mass,
         Unit::Kilogram => Fundamental::Mass,
         Unit::Gram => Fundamental::Mass,
         // Imperial
         Unit::PoundMass => Fundamental::Mass,
         Unit::Slug => Fundamental::Mass,
+        Unit::ShortTon => Fundamental::Mass,
+        Unit::LongTon => Fundamental::Mass,
 
 
         // Time

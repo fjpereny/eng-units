@@ -54,11 +54,14 @@ pub fn get_template(unit: Unit) -> (Vec<Unit>, Vec<Unit>) {
 
         // Mass
         // Metric
+        Unit::MetricTonne => num.push(Unit::MetricTonne),
         Unit::Kilogram => num.push(Unit::Kilogram),
         Unit::Gram => num.push(Unit::Gram),
         // Imperial
         Unit::PoundMass => num.push(Unit::PoundMass),
         Unit::Slug => num.push(Unit::Slug),
+        Unit::ShortTon => num.push(Unit::ShortTon),
+        Unit::LongTon => num.push(Unit::LongTon),
 
 
         // Time

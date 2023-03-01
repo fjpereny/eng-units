@@ -27,12 +27,9 @@ use crate::units::EngUnit;
 
 fn main() {
 
-    let mut u1 = EngUnit::from_unit(1.0, Unit::Slug, 1);
-    u1.push_unit(Unit::Hour, -1);
-    println!("{u1}");
-    
+    let mut u1 = EngUnit::from_unit(1.0, Unit::LongTon, 1);
     u1.change_unit(Unit::PoundMass);
-    u1.change_unit(Unit::Minute);
+
     println!("{u1}");
 
 }
