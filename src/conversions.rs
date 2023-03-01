@@ -141,11 +141,11 @@ pub fn unit_to_base_val(unit: &Unit) -> f64 {
 }
 
 pub fn base_to_unit_val(unit: &Unit) -> f64 {
-    1.0 / unit_to_base_val(&unit)
+    1.0 / unit_to_base_val(unit)
 }
 
 pub fn get_base_unit(unit: &Unit) -> Unit {
-    let fundamental = get_fundamental(&unit);
+    let fundamental = get_fundamental(unit);
     match fundamental {
         Fundamental::Length => Unit::Meter,
         Fundamental::Mass => Unit::Kilogram,

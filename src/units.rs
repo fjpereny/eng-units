@@ -65,6 +65,12 @@ pub struct EngUnit {
     pub amount_type: Unit,
 }
 
+impl Default for EngUnit {
+    fn default() -> Self {
+        EngUnit::new()
+    }
+}
+
 impl EngUnit {
     pub fn new() -> Self {
         EngUnit { 
@@ -220,7 +226,7 @@ impl EngUnit {
     }
 
     pub fn fundamental_counts(&self) -> [i32; 7] {
-        let counts = [
+        [
             self.length_count as i32,
             self.mass_count as i32,
             self.time_count as i32,
@@ -228,25 +234,24 @@ impl EngUnit {
             self.temp_count as i32,
             self.lumin_count as i32,
             self.amount_count as i32,
-        ];
-        counts
+        ]
     }
 
     pub fn units(&self) -> String {
         let num = self.print_numerator();
         let den = self.print_denominator();
 
-        if num.len() > 0 && den.len() > 0 {
-            return format!("({num})/({den})");
-        } else if num.len() == 0 {
-            return format!("1/({den})");
+        if !num.is_empty() && !den.is_empty() {
+            format!("({num})/({den})")
+        } else if num.is_empty() {
+            format!("1/({den})")
         } else {
-            return format!("{num}");
+            num
         }       
     }
 
     pub fn has_name(&self) -> bool {
-        self.units() != unit_names::unit_name(&self)
+        self.units() != unit_names::unit_name(self)
     }
 
     pub fn print_numerator(&self) -> String {
@@ -415,7 +420,7 @@ impl EngUnit {
     }
 
     pub fn unit_name(&self) -> &str {
-        unit_names::unit_name(&self)
+        unit_names::unit_name(self)
     }
 
 
@@ -424,7 +429,7 @@ impl EngUnit {
 impl std::fmt::Display for EngUnit {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let mut label = String::new();
-        if self.label != "" {
+        if !self.label.is_empty() {
             label.push_str(&self.label);
             label.push_str(": ");
         }
@@ -432,12 +437,12 @@ impl std::fmt::Display for EngUnit {
         let num = self.print_numerator();
         let den = self.print_denominator();
 
-        if num.len() > 0 && den.len() > 0 {
-            return write!(f, "{label}{val} ({num})/({den})");
-        } else if num.len() == 0 {
-            return write!(f, "{label}{val} /({den})");
+        if !num.is_empty() && !den.is_empty() {
+            write!(f, "{label}{val} ({num})/({den})")
+        } else if num.is_empty() {
+            write!(f, "{label}{val} /({den})")
         } else {
-            return write!(f, "{label}{val} {num}");
+            write!(f, "{label}{val} {num}")
         }        
     }
 }
@@ -445,7 +450,7 @@ impl std::fmt::Display for EngUnit {
 impl Add<f64> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: f64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value += rhs;
         new_unit
     }
@@ -453,7 +458,7 @@ impl Add<f64> for EngUnit {
 impl Add<f32> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: f32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value += rhs as f64;
         new_unit
     }
@@ -461,7 +466,7 @@ impl Add<f32> for EngUnit {
 impl Add<i64> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: i64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value += rhs as f64;
         new_unit
     }
@@ -469,7 +474,7 @@ impl Add<i64> for EngUnit {
 impl Add<i32> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: i32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value += rhs as f64;
         new_unit
     }
@@ -477,7 +482,7 @@ impl Add<i32> for EngUnit {
 impl Add<i16> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: i16) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value += rhs as f64;
         new_unit
     }
@@ -485,7 +490,7 @@ impl Add<i16> for EngUnit {
 impl Add<i8> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: i8) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value += rhs as f64;
         new_unit
     }
@@ -493,7 +498,7 @@ impl Add<i8> for EngUnit {
 impl Add<u64> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: u64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value += rhs as f64;
         new_unit
     }
@@ -501,7 +506,7 @@ impl Add<u64> for EngUnit {
 impl Add<u32> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: u32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value += rhs as f64;
         new_unit
     }
@@ -509,7 +514,7 @@ impl Add<u32> for EngUnit {
 impl Add<u16> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: u16) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value += rhs as f64;
         new_unit
     }
@@ -517,7 +522,7 @@ impl Add<u16> for EngUnit {
 impl Add<u8> for EngUnit {
     type Output = EngUnit;
     fn add(self, rhs: u8) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value += rhs as f64;
         new_unit
     }
@@ -592,7 +597,7 @@ impl AddAssign<EngUnit> for EngUnit {
 impl Sub<f64> for EngUnit {
     type Output = EngUnit;
     fn sub(self, rhs: f64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value -= rhs;
         new_unit
     }
@@ -600,7 +605,7 @@ impl Sub<f64> for EngUnit {
 impl Sub<f32> for EngUnit {
     type Output = EngUnit;
     fn sub(self, rhs: f32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value -= rhs as f64;
         new_unit
     }
@@ -608,7 +613,7 @@ impl Sub<f32> for EngUnit {
 impl Sub<i64> for EngUnit {
     type Output = EngUnit;
     fn sub(self, rhs: i64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value -= rhs as f64;
         new_unit
     }
@@ -616,7 +621,7 @@ impl Sub<i64> for EngUnit {
 impl Sub<i32> for EngUnit {
     type Output = EngUnit;
     fn sub(self, rhs: i32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value -= rhs as f64;
         new_unit
     }
@@ -624,7 +629,7 @@ impl Sub<i32> for EngUnit {
 impl Sub<i16> for EngUnit {
     type Output = EngUnit;
     fn sub(self, rhs: i16) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value -= rhs as f64;
         new_unit
     }
@@ -632,7 +637,7 @@ impl Sub<i16> for EngUnit {
 impl Sub<i8> for EngUnit {
     type Output = EngUnit;
     fn sub(self, rhs: i8) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value -= rhs as f64;
         new_unit
     }
@@ -640,7 +645,7 @@ impl Sub<i8> for EngUnit {
 impl Sub<u64> for EngUnit {
     type Output = EngUnit;
     fn sub(self, rhs: u64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value -= rhs as f64;
         new_unit
     }
@@ -648,7 +653,7 @@ impl Sub<u64> for EngUnit {
 impl Sub<u32> for EngUnit {
     type Output = EngUnit;
     fn sub(self, rhs: u32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value -= rhs as f64;
         new_unit
     }
@@ -656,7 +661,7 @@ impl Sub<u32> for EngUnit {
 impl Sub<u16> for EngUnit {
     type Output = EngUnit;
     fn sub(self, rhs: u16) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value -= rhs as f64;
         new_unit
     }
@@ -664,7 +669,7 @@ impl Sub<u16> for EngUnit {
 impl Sub<u8> for EngUnit {
     type Output = EngUnit;
     fn sub(self, rhs: u8) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value -= rhs as f64;
         new_unit
     }
@@ -740,7 +745,7 @@ impl SubAssign<EngUnit> for EngUnit {
 impl Mul<f64> for EngUnit {
     type Output = EngUnit;
     fn mul(self, rhs: f64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value *= rhs;
         new_unit
     }
@@ -748,7 +753,7 @@ impl Mul<f64> for EngUnit {
 impl Mul<f32> for EngUnit {
     type Output = EngUnit;
     fn mul(self, rhs: f32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value *= rhs as f64;
         new_unit
     }
@@ -756,7 +761,7 @@ impl Mul<f32> for EngUnit {
 impl Mul<i64> for EngUnit {
     type Output = EngUnit;
     fn mul(self, rhs: i64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value *= rhs as f64;
         new_unit
     }
@@ -764,7 +769,7 @@ impl Mul<i64> for EngUnit {
 impl Mul<i32> for EngUnit {
     type Output = EngUnit;
     fn mul(self, rhs: i32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value *= rhs as f64;
         new_unit
     }
@@ -772,7 +777,7 @@ impl Mul<i32> for EngUnit {
 impl Mul<i16> for EngUnit {
     type Output = EngUnit;
     fn mul(self, rhs: i16) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value *= rhs as f64;
         new_unit
     }
@@ -780,7 +785,7 @@ impl Mul<i16> for EngUnit {
 impl Mul<i8> for EngUnit {
     type Output = EngUnit;
     fn mul(self, rhs: i8) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value *= rhs as f64;
         new_unit
     }
@@ -788,7 +793,7 @@ impl Mul<i8> for EngUnit {
 impl Mul<u64> for EngUnit {
     type Output = EngUnit;
     fn mul(self, rhs: u64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value *= rhs as f64;
         new_unit
     }
@@ -796,7 +801,7 @@ impl Mul<u64> for EngUnit {
 impl Mul<u32> for EngUnit {
     type Output = EngUnit;
     fn mul(self, rhs: u32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value *= rhs as f64;
         new_unit
     }
@@ -804,7 +809,7 @@ impl Mul<u32> for EngUnit {
 impl Mul<u16> for EngUnit {
     type Output = EngUnit;
     fn mul(self, rhs: u16) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value *= rhs as f64;
         new_unit
     }
@@ -812,7 +817,7 @@ impl Mul<u16> for EngUnit {
 impl Mul<u8> for EngUnit {
     type Output = EngUnit;
     fn mul(self, rhs: u8) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value *= rhs as f64;
         new_unit
     }
@@ -900,7 +905,7 @@ impl MulAssign<EngUnit> for EngUnit {
 impl Div<f64> for EngUnit {
     type Output = EngUnit;
     fn div(self, rhs: f64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value /= rhs;
         new_unit
     }
@@ -909,7 +914,7 @@ impl Div<f64> for EngUnit {
 impl Div<f32> for EngUnit {
     type Output = EngUnit;
     fn div(self, rhs: f32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value /= rhs as f64;
         new_unit
     }
@@ -918,7 +923,7 @@ impl Div<f32> for EngUnit {
 impl Div<i64> for EngUnit {
     type Output = EngUnit;
     fn div(self, rhs: i64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value /= rhs as f64;
         new_unit
     }
@@ -927,7 +932,7 @@ impl Div<i64> for EngUnit {
 impl Div<i32> for EngUnit {
     type Output = EngUnit;
     fn div(self, rhs: i32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value /= rhs as f64;
         new_unit
     }
@@ -936,7 +941,7 @@ impl Div<i32> for EngUnit {
 impl Div<i16> for EngUnit {
     type Output = EngUnit;
     fn div(self, rhs: i16) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value /= rhs as f64;
         new_unit
     }
@@ -945,7 +950,7 @@ impl Div<i16> for EngUnit {
 impl Div<i8> for EngUnit {
     type Output = EngUnit;
     fn div(self, rhs: i8) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value /= rhs as f64;
         new_unit
     }
@@ -954,7 +959,7 @@ impl Div<i8> for EngUnit {
 impl Div<u64> for EngUnit {
     type Output = EngUnit;
     fn div(self, rhs: u64) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value /= rhs as f64;
         new_unit
     }
@@ -963,7 +968,7 @@ impl Div<u64> for EngUnit {
 impl Div<u32> for EngUnit {
     type Output = EngUnit;
     fn div(self, rhs: u32) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value /= rhs as f64;
         new_unit
     }
@@ -972,7 +977,7 @@ impl Div<u32> for EngUnit {
 impl Div<u16> for EngUnit {
     type Output = EngUnit;
     fn div(self, rhs: u16) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value /= rhs as f64;
         new_unit
     }
@@ -981,7 +986,7 @@ impl Div<u16> for EngUnit {
 impl Div<u8> for EngUnit {
     type Output = EngUnit;
     fn div(self, rhs: u8) -> Self::Output {
-        let mut new_unit = self.clone();
+        let mut new_unit = self;
         new_unit.value /= rhs as f64;
         new_unit
     }

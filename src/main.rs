@@ -26,6 +26,12 @@ use crate::units::EngUnit;
 
 fn main() {
 
+    let mut u1 = EngUnit::from_unit(1.0, Unit::Meter, 1);
+
+    let x = 12.7 as f32;
+
+    u1 += x;
+    println!("{u1}");
 
 }
 
