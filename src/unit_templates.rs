@@ -8,8 +8,9 @@ pub fn build_unit(value: f64, unit: Unit, power: i8) -> EngUnit {
     let mut new_unit = EngUnit::new();
     new_unit.value = value;
 
-    let (num, den) = get_template(unit);
-    if power > 0 {       
+    let (scalar, num, den) = get_template(unit);
+    if power > 0 {  
+        new_unit.value *= scalar;     
         for _ in 0..power {
             for n in &num {
                 new_unit.push_unit(*n, 1);
@@ -20,6 +21,7 @@ pub fn build_unit(value: f64, unit: Unit, power: i8) -> EngUnit {
         }
     }
     if power < 0 {
+        new_unit.value /= scalar;
         for _ in 0..power.abs() {
             for n in &num {
                 new_unit.push_unit(*n, -1);
@@ -33,7 +35,8 @@ pub fn build_unit(value: f64, unit: Unit, power: i8) -> EngUnit {
 }
 
 
-pub fn get_template(unit: Unit) -> (Vec<Unit>, Vec<Unit>) {
+pub fn get_template(unit: Unit) -> (f64, Vec<Unit>, Vec<Unit>) {
+    let mut scalar: f64 = 1.0;
     let mut num: Vec<Unit> = Vec::new();
     let mut den: Vec<Unit> = Vec::new();
     match unit {
@@ -82,13 +85,33 @@ pub fn get_template(unit: Unit) -> (Vec<Unit>, Vec<Unit>) {
         Unit::FahrenheitChange => num.push(Unit::FahrenheitChange),
 
 
+        // Force
         Unit::Newton => {
             num.push(Unit::Kilogram);
             num.push(Unit::Meter);
             den.push(Unit::Second);
             den.push(Unit::Second);
         },
+
+
+        // Energy
+        Unit::Joule => {
+            num.push(Unit::Kilogram);
+            num.push(Unit::Meter);
+            num.push(Unit::Meter);
+            den.push(Unit::Second);
+            den.push(Unit::Second);
+        }
+        Unit::Kilojoule => {
+            scalar = 1000.0;
+            num.push(Unit::Kilogram);
+            num.push(Unit::Meter);
+            num.push(Unit::Meter);
+            den.push(Unit::Second);
+            den.push(Unit::Second);
+        }
+
         _ => {},
     }
-    (num, den)
+    (scalar, num, den)
 }

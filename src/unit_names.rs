@@ -20,6 +20,7 @@ use crate::units::*;
             [ 0,  1, -1,  0,  0,  0,  0] => "mass rate of change",
             [ 0,  0,  0,  0,  1,  0,  0] => "temperature",
             [ 1,  1, -2,  0,  0,  0,  0] => "force",
+            [ 2,  1, -2,  0,  0,  0,  0] => "energy",
 
             _ => "uknown"           
         }

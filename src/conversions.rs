@@ -222,6 +222,10 @@ pub enum Unit {
     // Force
     Newton,
 
+    // Energy
+    Kilojoule,
+    Joule,
+
     Temp,
 }
 

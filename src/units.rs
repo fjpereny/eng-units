@@ -1014,13 +1014,13 @@ impl Div<EngUnit> for EngUnit {
         let mut new_unit = self.clone();
         let other = convert_other(&self, &rhs);
         new_unit.value /= other.value;
-        new_unit.length_count += other.length_count;
-        new_unit.mass_count += other.mass_count;
-        new_unit.current_count += other.current_count;
-        new_unit.temp_count += other.temp_count;
-        new_unit.time_count += other.time_count;
-        new_unit.lumin_count += other.lumin_count;
-        new_unit.amount_count += other.amount_count;
+        new_unit.length_count -= other.length_count;
+        new_unit.mass_count -= other.mass_count;
+        new_unit.current_count -= other.current_count;
+        new_unit.temp_count -= other.temp_count;
+        new_unit.time_count -= other.time_count;
+        new_unit.lumin_count -= other.lumin_count;
+        new_unit.amount_count -= other.amount_count;
         new_unit        
     }
 }
@@ -1080,13 +1080,13 @@ impl DivAssign<EngUnit> for EngUnit {
     fn div_assign(&mut self, rhs: Self) {
         let other = convert_other(self, &rhs);
         self.value /= other.value;
-        self.length_count += other.length_count;
-        self.mass_count += other.mass_count;
-        self.current_count += other.current_count;
-        self.temp_count += other.temp_count;
-        self.time_count += other.time_count;
-        self.lumin_count += other.lumin_count;
-        self.amount_count += other.amount_count;
+        self.length_count -= other.length_count;
+        self.mass_count -= other.mass_count;
+        self.current_count -= other.current_count;
+        self.temp_count -= other.temp_count;
+        self.time_count -= other.time_count;
+        self.lumin_count -= other.lumin_count;
+        self.amount_count -= other.amount_count;
     }    
 }
 

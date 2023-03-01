@@ -27,8 +27,13 @@ use crate::units::EngUnit;
 
 fn main() {
 
-    let mut u1 = EngUnit::from_unit(1.0, Unit::LongTon, 1);
-    u1.change_unit(Unit::PoundMass);
+    let mut u1 = EngUnit::from_unit(100.0, Unit::Newton, 1);
+    println!("{u1}");
+
+    let mut u2 = EngUnit::from_unit(50.0, Unit::Meter, 1);
+    u2.push_unit(Unit::Second, -1);
+
+    u1 /= u2;
 
     println!("{u1}");
 
