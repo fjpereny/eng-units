@@ -340,6 +340,9 @@ impl EngUnit {
             den.push_str(&power.to_string());
         }
         if self.mass_count <= -1 {
+            if self.length_count < 0 {
+                den.push('-');
+            }
             let s = self.mass_type.to_string();
             den.push_str(&s);
         }
@@ -349,6 +352,9 @@ impl EngUnit {
             den.push_str(&power.to_string());
         }
         if self.time_count <= -1 {
+            if self.length_count < 0 || self.mass_count < 0 {
+                den.push('-');
+            }
             let s = self.time_type.to_string();
             den.push_str(&s);
         }
@@ -358,6 +364,9 @@ impl EngUnit {
             den.push_str(&power.to_string());
         }
         if self.current_count <= -1 {
+            if self.length_count < 0 || self.mass_count < 0 || self.time_count < 0 {
+                den.push('-');
+            }
             let s = self.current_type.to_string();
             den.push_str(&s);
         }
@@ -367,6 +376,9 @@ impl EngUnit {
             den.push_str(&power.to_string());
         }
         if self.temp_count <= -1 {
+            if self.length_count < 0 || self.mass_count < 0 || self.time_count < 0 || self.current_count < 0 {
+                den.push('-');
+            }
             let s = self.temp_type.to_string();
             den.push_str(&s);
         }
@@ -376,6 +388,9 @@ impl EngUnit {
             den.push_str(&power.to_string());
         }
         if self.lumin_count <= -1 {
+            if self.length_count < 0 || self.mass_count < 0 || self.time_count < 0 || self.current_count < 0 || self.temp_count < 0 {
+                den.push('-');
+            }
             let s = self.lumin_type.to_string();
             den.push_str(&s);
         }
@@ -385,6 +400,9 @@ impl EngUnit {
             den.push_str(&power.to_string());
         }
         if self.amount_count <= -1 {
+            if self.length_count < 0 || self.mass_count < 0 || self.time_count < 0 || self.current_count < 0 || self.temp_count < 0 || self.lumin_count < 0 {
+                den.push('-');
+            }
             let s = self.amount_type.to_string();
             den.push_str(&s);
         }

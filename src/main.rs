@@ -21,18 +21,15 @@ pub mod conversions;
 pub mod fundamental;
 pub mod unit_names;
 
-use crate::conversions::{Unit, K_to_temp};
+use crate::conversions::*;
 use crate::units::EngUnit;
 
 fn main() {
 
-    let t1 = EngUnit::from_unit(1.0, Unit::Celcius, 1);
-
-    let x = conversions::temp_to_K(1.0, &Unit::Kelvin);
-    println!("{}", &x);
-
-    let y = K_to_temp(x, &Unit::Kelvin);
-    println!("{y}")
+    let mut u1 = EngUnit::from_unit(1.0, Unit::Kilogram, 1);
+    u1.push_unit(Unit::Second, -2);
+    u1.push_unit(Unit::Meter, -2);
+    println!("{u1}");
 
 }
 
