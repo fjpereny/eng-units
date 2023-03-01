@@ -26,10 +26,6 @@ use crate::units::EngUnit;
 
 fn main() {
 
-    let mut u1 = EngUnit::from_unit(1.0, Unit::Kilogram, 1);
-    u1.push_unit(Unit::Second, -2);
-    u1.push_unit(Unit::Meter, -2);
-    println!("{u1}");
 
 }
 

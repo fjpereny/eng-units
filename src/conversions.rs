@@ -51,11 +51,17 @@ pub mod convs {
     pub const SECOND_TO_BASE: f64 = 1.0;
     pub const MINUTE_TO_BASE: f64 = 60.0;
     pub const HOUR_TO_BASE: f64 = 3600.0;
+
+    // Temperature Change
+    pub const KELVIN_TO_BASE: f64 = 1.0;
+    pub const CELCIUS_TO_BASE: f64 = 1.0;
+    pub const FAHRENHEIT_TO_BASE: f64 = 5.0 / 9.0;
+    pub const RANKINE_TO_BASE: f64 = 5.0 / 9.0;
     
 }
 
 
-pub fn temp_to_K(value: f64, temp: &Unit) -> f64 {
+pub fn temp_to_kelvin(value: f64, temp: &Unit) -> f64 {
     match temp {
         Unit::Kelvin => value,
         Unit::Rankine => 5.0 / 9.0 * value,
@@ -70,7 +76,7 @@ pub fn temp_to_K(value: f64, temp: &Unit) -> f64 {
     }
 }
 
-pub fn K_to_temp(value: f64, temp: &Unit) -> f64 {
+pub fn kelvin_to_temp(value: f64, temp: &Unit) -> f64 {
     match temp {
         Unit::Kelvin => value,
         Unit::Rankine => value * 9.0 / 5.0,
@@ -120,6 +126,12 @@ pub fn unit_to_base_val(unit: &Unit) -> f64 {
         Unit::Minute => convs::MINUTE_TO_BASE,
         Unit::Hour => convs::HOUR_TO_BASE,
 
+        // Temperature
+        Unit::CelciusChange => convs::CELCIUS_TO_BASE,
+        Unit::KelvinChange => convs::KELVIN_TO_BASE,
+        Unit::FahrenheitChange => convs::FAHRENHEIT_TO_BASE,
+        Unit::RankineChange => convs::RANKINE_TO_BASE,
+
         _ => {
             println!("UNKNOWN UNIT");
             println!("UNIT CONVERSION CONSTANT NOT SET!");
@@ -138,6 +150,7 @@ pub fn get_base_unit(unit: &Unit) -> Unit {
         Fundamental::Length => Unit::Meter,
         Fundamental::Mass => Unit::Kilogram,
         Fundamental::Time => Unit::Second,
+        Fundamental::Temperature => Unit::CelciusChange,
         _ => {
             println!("NOT YET IMPLEMENTED");
             println!("get_base_unit function is not complete!");
@@ -181,7 +194,11 @@ pub enum Unit {
     Rankine,
     Celcius,
     Fahrenheit,
-
+    // Change in Temperature
+    KelvinChange,
+    RankineChange,
+    CelciusChange,
+    FahrenheitChange,
 
     Temp,
 }
@@ -221,6 +238,11 @@ impl std::fmt::Display for Unit {
             Unit::Rankine => "°R",
             Unit::Celcius => "°C",
             Unit::Fahrenheit => "°F",
+            // Change in Temperature
+            Unit::KelvinChange => "ΔK",
+            Unit::RankineChange => "Δ°R",
+            Unit::CelciusChange => "Δ°C",
+            Unit::FahrenheitChange => "Δ°F",
 
             _ => "Need to finish all the Unit strings",
         };

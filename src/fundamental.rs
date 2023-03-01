@@ -71,12 +71,17 @@ pub fn get_fundamental(unit: &Unit) -> Fundamental {
         Unit::Minute => Fundamental::Time,
         Unit::Hour => Fundamental::Time,
 
+
         // Temperature
         Unit::Kelvin => Fundamental::Temperature,
         Unit::Rankine => Fundamental::Temperature,
         Unit::Celcius => Fundamental::Temperature,
         Unit::Fahrenheit => Fundamental::Temperature,
-
+        // Temperature Change
+        Unit::KelvinChange => Fundamental::Temperature,
+        Unit::RankineChange => Fundamental::Temperature,
+        Unit::CelciusChange => Fundamental::Temperature,
+        Unit::FahrenheitChange => Fundamental::Temperature,
 
         _ => {
             println!("WARNING: THIS UNIT FUNDAMENTAL NOT SET");
