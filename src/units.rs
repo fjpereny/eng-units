@@ -300,7 +300,7 @@ impl EngUnit {
         }
         if self.time_count >= 2 {
             num.push('^');
-            num.push_str(&self.time_type.to_string());
+            num.push_str(&self.time_count.to_string());
         }
         if self.current_count >= 1 {
             if self.length_count > 0 || self.mass_count > 0 || self.time_count > 0 {
