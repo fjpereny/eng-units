@@ -7,6 +7,10 @@
 [![Test-macOS](https://github.com/fjpereny/eng-units/actions/workflows/test_macOS.yml/badge.svg)](https://github.com/fjpereny/eng-units/actions/workflows/test_ubuntu.yml)
 [![Test-Windows](https://github.com/fjpereny/eng-units/actions/workflows/test_windows.yml/badge.svg)](https://github.com/fjpereny/eng-units/actions/workflows/test_windows.yml)
 
+## This is a work in process!
+### Only a few units have been implemented for development purposes!
+#### Feel free to review and contribute on the repository!
+
 ## Example Usage
 ### Making a EngUnit
 #### Example Code
