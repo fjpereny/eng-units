@@ -32,12 +32,16 @@ fn main() {
 
     u1 *= m;
 
-    println!("{u1}");
+    // println!("{u1}");
 
-    let j = EngUnit::from_unit(1.0, Unit::Joule, 1);
+    let mut j = EngUnit::from_unit(1.0, Unit::Joule, 1);
 
-    let x = u1 / j;
-    println!("{x}");
+    j.change_unit(Unit::Foot);
+    dbg!(&u1);
+    dbg!(&j);
+
+    // let x = u1 / j;
+    println!("{}", u1 == j);
 
 }
 

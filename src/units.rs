@@ -1093,6 +1093,49 @@ impl DivAssign<EngUnit> for EngUnit {
 }
 
 
+impl PartialEq for EngUnit {
+    fn eq(&self, other: &Self) -> bool {
+        if self.length_count != other.length_count {
+            return false;
+        }
+        if self.mass_count != other.mass_count {
+            return false;
+        }
+        if self.time_count != other.time_count {
+            return false;
+        }
+        if self.current_count != other.current_count {
+            return false;
+        }
+        if self.temp_count != other.temp_count {
+            return false;
+        }
+        if self.lumin_count != other.lumin_count {
+            return false;
+        }
+        if self.amount_count != other.amount_count {
+            return false;
+        }
+
+        let mut other_clone = other.clone();
+        other_clone.change_unit(self.length_type);
+        other_clone.change_unit(self.mass_type);
+        other_clone.change_unit(self.time_type);
+        other_clone.change_unit(self.current_type);
+        other_clone.change_unit(self.temp_type);
+        other_clone.change_unit(self.lumin_type);
+        other_clone.change_unit(self.amount_type);
+
+        dbg!(&other_clone);
+
+        if self.value != other_clone.value {
+            return false;
+        }
+
+        true
+    }
+}
+
 
 fn convert_other(this: &EngUnit, other: &EngUnit) -> EngUnit {
     let mut other_converted = other.clone();

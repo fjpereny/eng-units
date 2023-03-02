@@ -146,8 +146,9 @@ pub fn unit_to_base_val(unit: &Unit) -> f64 {
 
         _ => {
             println!("UNKNOWN UNIT");
+            dbg!(&unit);
             println!("UNIT CONVERSION CONSTANT NOT SET!");
-            0.0
+            1.0
         },
     }
 }
