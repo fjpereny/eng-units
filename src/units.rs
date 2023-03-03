@@ -97,6 +97,10 @@ impl EngUnit {
          }
     }
 
+    pub fn set_label<S: AsRef<str>>(&mut self, label: S) {
+        self.label = label.as_ref().to_string();
+    }
+
     pub fn from_unit(val: f64, unit: Unit, power: i8) -> EngUnit {
         unit_templates::build_unit(val, unit, power)        
     }
