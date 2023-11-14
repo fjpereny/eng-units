@@ -1,7 +1,16 @@
 [package]
 name = "eng-units"
-version = "0.1.0"
+authors = ["Frank Pereny"]
+version = "0.1.4"
 edition = "2021"
+readme = "README.md"
+description = "Engineering unit coversions and calculations."
+repository = "https://github.com/fjpereny/eng-units"
+license = "GPL-3.0"
+license-file = "./LICENSE"
+kewords = ["engineering", "calculations", "units", "conversion", "measurement"]
+categories = ["science", "mathematics", "data-structures", "aerospace"]
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
