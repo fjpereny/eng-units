@@ -105,7 +105,11 @@ impl EngUnit {
             let from_unit = &self.mass_unit;
             let to_unit = MassUnit::get_unit(to_unit);
             conversion_factor = MassUnit::conversion_factor(&from_unit, &to_unit);
-            new_unit.value *= conversion_factor;
+            if self.mass_count > 0 {
+                new_unit.value *= conversion_factor;
+            } else if self.mass_count < 0 {
+                new_unit.value /= conversion_factor;
+            }
             new_unit.mass_unit = to_unit;
         }
         new_unit
@@ -462,7 +466,7 @@ impl EngUnit {
         self.multiply_units(&recip)
     }
 
-    fn reciprocal(&self) -> EngUnit {
+    pub fn reciprocal(&self) -> EngUnit {
         let mut recip = self.clone();
         recip.value = 1.0 / recip.value;
         recip.amount_of_substance_count *= -1;

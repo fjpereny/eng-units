@@ -44,12 +44,26 @@ mod tests {
     }
 
     #[test]
-    fn test_2() {
-        let temp_1 = temperature!(1.0, TemperatureDeltaUnit::K);
-        let mass_1 = mass!(1.0, MassUnit::Pound);
-        let t_1 = time!(1.0, TimeUnit::Minute);
-        let unit = temp_1 * mass_1 / t_1 * 123.45;
-        assert_eq!(123.45, unit.value);
-        assert_eq!("123.45 lb·K/min", unit.to_string());
+    fn example_test_4() {
+        let temp_1 = temperature!(4.0, TemperatureDeltaUnit::C);
+        let mass_1 = mass!(5.0, MassUnit::Kilogram);
+        let t_1 = time!(10.0, TimeUnit::Second);
+
+        let unit = temp_1 * mass_1 / t_1;
+        assert_eq!(2.0, unit.value);
+        assert_eq!("2.00 kg·°C/s", unit.to_string());
+
+        let double = 2.0 * unit;
+        assert_eq!(4.0, double.value);
+        assert_eq!("4.00 kg·°C/s", double.to_string());
+
+        let flip = double.reciprocal();
+        assert_eq!(0.25, flip.value);
+        assert_eq!("0.25 s/kg·°C", flip.to_string());
+
+        let mass_2 = mass!(10.0, MassUnit::Kilogram);
+        let canceled_out = flip * mass_2;
+        assert_eq!(2.50, canceled_out.value);
+        assert_eq!("2.50 s/°C", canceled_out.to_string());
     }
 }
