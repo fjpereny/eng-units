@@ -1,11 +1,9 @@
 # eng-units
-
 ## Rust library to build, calculate and convert custom engineering units.
 
 [![License](https://img.shields.io/github/license/fjpereny/eng-units)](https://www.gnu.org/licenses/gpl-3.0)
-[![Test-Ubuntu](https://github.com/fjpereny/eng-units/actions/workflows/test_ubuntu.yml/badge.svg)](https://github.com/fjpereny/eng-units/actions/workflows/test_macOS.yml)
-[![Test-macOS](https://github.com/fjpereny/eng-units/actions/workflows/test_macOS.yml/badge.svg)](https://github.com/fjpereny/eng-units/actions/workflows/test_ubuntu.yml)
-[![Test-Windows](https://github.com/fjpereny/eng-units/actions/workflows/test_windows.yml/badge.svg)](https://github.com/fjpereny/eng-units/actions/workflows/test_windows.yml)
+[![Tests](https://github.com/fjpereny/eng-units/actions/workflows/tests.yml/badge.svg)](https://github.com/fjpereny/eng-units/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/fjpereny/eng-units/graph/badge.svg?token=2DS8CF697Q)](https://codecov.io/gh/fjpereny/eng-units)
 
 ## Project Goals
 - Easy to use engineering units and calculations
@@ -51,7 +49,7 @@ assert_eq!("2.50 s/°C", canceled_out.to_string());
 ```
 
 ## Test coverage status
-
+![Coverage](https://codecov.io/gh/fjpereny/eng-units/graphs/tree.svg?token=2DS8CF697Q)
 
 ## License
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
