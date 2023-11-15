@@ -8,12 +8,23 @@
 [![Test-Windows](https://github.com/fjpereny/eng-units/actions/workflows/test_windows.yml/badge.svg)](https://github.com/fjpereny/eng-units/actions/workflows/test_windows.yml)
 
 ## Example Usage
-### Making a EngUnit
+### Creating a unit 
 ```rust
-let temp_1 = temperature!(1.0, TemperatureDeltaUnit::K);
-let mass_1 = mass!(1.0, MassUnit::Pound);
-let t_1 = time!(1.0, TimeUnit::Minute);
-let unit = temp_1 * mass_1 / t_1 * 123.45;
+let quarter_pounder = mass!(0.25, MassUnit::Pound);
+```
+### Convert units 
+```rust
+let royal_with_cheese = quarter_pounder.convert(MassUnit::Kilogram);
+```
+### Engineering Calculations
+```rust
+let temp = temperature!(32.5, TemperatureDeltaUnit::C);
+let mass = mass!(122.0, MassUnit::Pound);
+let t_1 = time!(35.2, TimeUnit::Minute);
+let unit_1 = temp_1 * mass_1 / t_1;
+assert_eq!(3660.86647727,unit.value);
+assert_eq!("3660.87 lb·C/min", unit.to_string());
+let unit_2 = 2 * unit_1;
 assert_eq!(123.45, unit.value);
 assert_eq!("123.45 lb·K/min", unit.to_string());
 ```

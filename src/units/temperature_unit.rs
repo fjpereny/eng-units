@@ -79,15 +79,14 @@ impl TemperatureDeltaUnit {
 
 #[cfg(test)]
 mod tests {
-    use crate::units::amount_of_substance::AmountOfSubstanceUnit;
-    use crate::units::electric_current::ElectricCurrentUnit;
-    use crate::units::length::LengthUnit;
-    use crate::units::luminous_intensity::LuminousIntensityUnit;
-    use crate::units::mass::MassUnit;
-    use crate::units::time::TimeUnit;
+    use crate::units::amount_of_substance_unit::AmountOfSubstanceUnit;
+    use crate::units::electric_current_unit::ElectricCurrentUnit;
+    use crate::units::length_unit::LengthUnit;
+    use crate::units::luminous_intensity_unit::LuminousIntensityUnit;
+    use crate::units::mass_unit::MassUnit;
+    use crate::units::temperature_unit::TemperatureDeltaUnit;
+    use crate::units::time_unit::TimeUnit;
     use crate::units::EngUnit;
-
-    use super::*;
 
     #[test]
     fn conversion_r_to_r() {

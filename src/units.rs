@@ -1,18 +1,18 @@
-pub mod amount_of_substance;
-pub mod electric_current;
-pub mod length;
-pub mod luminous_intensity;
-pub mod mass;
-pub mod temperature;
-pub mod time;
+pub mod amount_of_substance_unit;
+pub mod electric_current_unit;
+pub mod length_unit;
+pub mod luminous_intensity_unit;
+pub mod mass_unit;
+pub mod temperature_unit;
+pub mod time_unit;
 
-use crate::units::amount_of_substance::AmountOfSubstanceUnit;
-use crate::units::electric_current::ElectricCurrentUnit;
-use crate::units::length::LengthUnit;
-use crate::units::luminous_intensity::LuminousIntensityUnit;
-use crate::units::mass::MassUnit;
-use crate::units::temperature::TemperatureDeltaUnit;
-use crate::units::time::TimeUnit;
+use crate::units::amount_of_substance_unit::AmountOfSubstanceUnit;
+use crate::units::electric_current_unit::ElectricCurrentUnit;
+use crate::units::length_unit::LengthUnit;
+use crate::units::luminous_intensity_unit::LuminousIntensityUnit;
+use crate::units::mass_unit::MassUnit;
+use crate::units::temperature_unit::TemperatureDeltaUnit;
+use crate::units::time_unit::TimeUnit;
 
 use std::fmt::Display;
 use std::ops;
@@ -45,10 +45,35 @@ impl Default for EngUnit {
 impl Display for EngUnit {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         if self.has_units() {
-            write!(f, "{} {}", self.value, self.unit_to_string())
+            write!(f, "{:.2} {}", self.value, self.unit_to_string())
         } else {
-            write!(f, "{}", self.value)
+            write!(f, "{:.2}", self.value)
         }
+    }
+}
+
+pub trait Convert<T> {
+    fn conversion_factor(from_unit: &T, to_unit: &T) -> f64;
+}
+
+pub trait IsEngUnitType {
+    fn is_amount_unit() -> bool {
+        false
+    }
+    fn is_electric_current_unit() -> bool {
+        false
+    }
+    fn is_legnth_unit() -> bool {
+        false
+    }
+    fn is_luminous_unit() -> bool {
+        false
+    }
+    fn is_mass_unit() -> bool {
+        false
+    }
+    fn is_temperature_unit() -> bool {
+        false
     }
 }
 
@@ -71,6 +96,19 @@ impl EngUnit {
             amount_of_substance_count: 0,
             amount_of_substance_unit: AmountOfSubstanceUnit::None,
         }
+    }
+
+    pub fn convert<T: IsEngUnitType + Into<MassUnit>>(&self, to_unit: T) -> Self {
+        let mut new_unit = self.clone();
+        let conversion_factor;
+        if T::is_mass_unit() {
+            let from_unit = &self.mass_unit;
+            let to_unit = MassUnit::get_unit(to_unit);
+            conversion_factor = MassUnit::conversion_factor(&from_unit, &to_unit);
+            new_unit.value *= conversion_factor;
+            new_unit.mass_unit = to_unit;
+        }
+        new_unit
     }
 
     fn has_units(&self) -> bool {
@@ -286,18 +324,18 @@ impl EngUnit {
         let new_amount_of_substance_count =
             self.amount_of_substance_count + other.amount_of_substance_count;
 
+        let mass_conversion_factor = MassUnit::conversion_factor(&other.mass_unit, &self.mass_unit);
         let temperature_conversion_factor = TemperatureDeltaUnit::conversion_factor(
             &other.temperature_unit,
             &self.temperature_unit,
         );
-        let mut other_value_temp = other.value * temperature_conversion_factor;
-        if other.temperature_count < 0 {
-            other_value_temp = 1.0 / other_value_temp;
-        }
+        let time_conversion_factor = TimeUnit::conversion_factor(&other.time_unit, &self.time_unit);
 
         let mut new_unit = EngUnit::new();
-        new_unit.value = self.value;
-        new_unit.value *= other_value_temp;
+        new_unit.value = self.value * other.value;
+        new_unit.value *= temperature_conversion_factor;
+        new_unit.value *= mass_conversion_factor;
+        new_unit.value *= time_conversion_factor;
 
         new_unit.length_count = new_length_count;
         new_unit.mass_count = new_mass_count;
@@ -361,10 +399,8 @@ impl EngUnit {
     }
 
     fn divide_units(self, other: &EngUnit) -> EngUnit {
-        if other.value == 0.0 {
-            panic!("Divide by zero error!");
-        }
         let mut other_reciprocal = other.clone();
+        other_reciprocal.value = 1.0 / other.value;
         other_reciprocal.length_count *= -1;
         other_reciprocal.mass_count *= -1;
         other_reciprocal.time_count *= -1;
@@ -389,13 +425,6 @@ impl ops::Mul for &EngUnit {
     fn mul(self, rhs: Self) -> Self::Output {
         let new_unit = self.clone();
         new_unit.multiply_units(rhs)
-    }
-}
-
-impl ops::Mul<&EngUnit> for EngUnit {
-    type Output = EngUnit;
-    fn mul(self, lhs: &Self) -> Self::Output {
-        self.multiply_units(lhs)
     }
 }
 
