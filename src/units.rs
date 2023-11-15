@@ -314,102 +314,165 @@ impl EngUnit {
     }
 
     fn multiply_units(self, other: &EngUnit) -> EngUnit {
-        let new_length_count = self.length_count + other.length_count;
-        let new_mass_count = self.mass_count + other.mass_count;
-        let new_time_count = self.time_count + other.time_count;
-        let new_temperature_count = self.temperature_count + other.temperature_count;
-        let new_electric_current_count = self.electric_current_count + other.electric_current_count;
-        let new_luminous_intensity_count =
-            self.luminous_intensity_count + other.luminous_intensity_count;
-        let new_amount_of_substance_count =
+        let mut new_unit = EngUnit::new();
+        new_unit.amount_of_substance_count =
             self.amount_of_substance_count + other.amount_of_substance_count;
+        new_unit.electric_current_count =
+            self.electric_current_count + other.electric_current_count;
+        new_unit.length_count = self.length_count + other.length_count;
+        new_unit.luminous_intensity_count =
+            self.luminous_intensity_count + other.luminous_intensity_count;
+        new_unit.mass_count = self.mass_count + other.mass_count;
+        new_unit.temperature_count = self.temperature_count + other.temperature_count;
+        new_unit.time_count = self.time_count + other.time_count;
 
-        let mass_conversion_factor = MassUnit::conversion_factor(&other.mass_unit, &self.mass_unit);
-        let temperature_conversion_factor = TemperatureDeltaUnit::conversion_factor(
+        // let mut amount_conversion_factor = AmountOfSubstanceUnit::conversion_factor(
+        //     &other.amount_of_substance_unit,
+        //     &self.amount_of_substance_unit,
+        // );
+        // if other.amount_of_substance_count < 0 {
+        //     amount_conversion_factor = 1.0 / amount_conversion_factor;
+        // }
+
+        // let mut electric_conversion_factor = ElectricCurrentUnit::conversion_factor(
+        //     &other.electric_current_unit,
+        //     &self.electric_current_unit,
+        // );
+        // if other.electric_current_count < 0 {
+        //     electric_conversion_factor = 1.0 / electric_conversion_factor;
+        // }
+
+        // let mut length_conversion_factor =
+        //     LengthUnit::conversion_factor(&other.length_unit, &self.length_unit);
+        // if other.length_count < 0 {
+        //     length_conversion_factor = 1.0 / length_conversion_factor;
+        // }
+
+        // let mut luminous_conversion_factor = LuminousIntensityUnit::conversion_factor(
+        //     &other.luminous_intensity_unit,
+        //     &self.luminous_intensity_unit,
+        // );
+        // if other.luminous_intensity_count < 0 {
+        //     luminous_conversion_factor = 1.0 / luminous_conversion_factor;
+        // }
+
+        let mut mass_conversion_factor =
+            MassUnit::conversion_factor(&other.mass_unit, &self.mass_unit);
+        if other.mass_count < 0 {
+            mass_conversion_factor = 1.0 / mass_conversion_factor;
+        }
+
+        let mut temperature_conversion_factor = TemperatureDeltaUnit::conversion_factor(
             &other.temperature_unit,
             &self.temperature_unit,
         );
-        let time_conversion_factor = TimeUnit::conversion_factor(&other.time_unit, &self.time_unit);
+        if other.temperature_count < 0 {
+            temperature_conversion_factor = 1.0 / temperature_conversion_factor;
+        }
 
-        let mut new_unit = EngUnit::new();
+        let mut time_conversion_factor =
+            TimeUnit::conversion_factor(&other.time_unit, &self.time_unit);
+        if other.time_count < 0 {
+            time_conversion_factor = 1.0 / time_conversion_factor;
+        }
+
         new_unit.value = self.value * other.value;
-        new_unit.value *= temperature_conversion_factor;
+        // new_unit.value *= amount_conversion_factor;
+        // new_unit.value *= electric_conversion_factor;
+        // new_unit.value *= length_conversion_factor;
+        // new_unit.value *= luminous_conversion_factor;
         new_unit.value *= mass_conversion_factor;
+        new_unit.value *= temperature_conversion_factor;
         new_unit.value *= time_conversion_factor;
 
-        new_unit.length_count = new_length_count;
-        new_unit.mass_count = new_mass_count;
-        new_unit.time_count = new_time_count;
-        new_unit.temperature_count = new_temperature_count;
-        new_unit.electric_current_count = new_electric_current_count;
-        new_unit.luminous_intensity_count = new_luminous_intensity_count;
-        new_unit.amount_of_substance_count = new_amount_of_substance_count;
-
-        if new_length_count != 0 {
-            if self.length_count != 0 {
-                new_unit.length_unit = self.length_unit;
-            } else {
-                new_unit.length_unit = other.length_unit.clone();
-            }
-        }
-        if new_mass_count != 0 {
-            if self.mass_count != 0 {
-                new_unit.mass_unit = self.mass_unit;
-            } else {
-                new_unit.mass_unit = other.mass_unit.clone();
-            }
-        }
-        if new_time_count != 0 {
-            if self.time_count != 0 {
-                new_unit.time_unit = self.time_unit;
-            } else {
-                new_unit.time_unit = other.time_unit.clone();
-            }
-        }
-        if new_temperature_count != 0 {
-            if self.temperature_count != 0 {
-                new_unit.temperature_unit = self.temperature_unit;
-            } else {
-                new_unit.temperature_unit = other.temperature_unit.clone();
-            }
-        }
-        if new_electric_current_count != 0 {
-            if self.electric_current_count != 0 {
-                new_unit.electric_current_unit = self.electric_current_unit;
-            } else {
-                new_unit.electric_current_unit = other.electric_current_unit.clone();
-            }
-        }
-        if new_luminous_intensity_count != 0 {
-            if self.luminous_intensity_count != 0 {
-                new_unit.luminous_intensity_unit = self.luminous_intensity_unit;
-            } else {
-                new_unit.luminous_intensity_unit = other.luminous_intensity_unit.clone();
-            }
-        }
-        if new_amount_of_substance_count != 0 {
+        if new_unit.amount_of_substance_count != 0 {
             if self.amount_of_substance_count != 0 {
                 new_unit.amount_of_substance_unit = self.amount_of_substance_unit;
             } else {
                 new_unit.amount_of_substance_unit = other.amount_of_substance_unit.clone();
             }
+        } else {
+            new_unit.amount_of_substance_unit = AmountOfSubstanceUnit::None;
         }
 
+        if new_unit.electric_current_count != 0 {
+            if self.electric_current_count != 0 {
+                new_unit.electric_current_unit = self.electric_current_unit;
+            } else {
+                new_unit.electric_current_unit = other.electric_current_unit.clone();
+            }
+        } else {
+            new_unit.electric_current_unit = ElectricCurrentUnit::None;
+        }
+
+        if new_unit.length_count != 0 {
+            if self.length_count != 0 {
+                new_unit.length_unit = self.length_unit;
+            } else {
+                new_unit.length_unit = other.length_unit.clone();
+            }
+        } else {
+            new_unit.length_unit = LengthUnit::None;
+        }
+
+        if new_unit.luminous_intensity_count != 0 {
+            if self.luminous_intensity_count != 0 {
+                new_unit.luminous_intensity_unit = self.luminous_intensity_unit;
+            } else {
+                new_unit.luminous_intensity_unit = other.luminous_intensity_unit.clone();
+            }
+        } else {
+            new_unit.luminous_intensity_unit = LuminousIntensityUnit::None;
+        }
+
+        if new_unit.mass_count != 0 {
+            if self.mass_count != 0 {
+                new_unit.mass_unit = self.mass_unit;
+            } else {
+                new_unit.mass_unit = other.mass_unit.clone();
+            }
+        } else {
+            new_unit.mass_unit = MassUnit::None;
+        }
+
+        if new_unit.temperature_count != 0 {
+            if self.temperature_count != 0 {
+                new_unit.temperature_unit = self.temperature_unit;
+            } else {
+                new_unit.temperature_unit = other.temperature_unit.clone();
+            }
+        } else {
+            new_unit.temperature_unit = TemperatureDeltaUnit::None;
+        }
+
+        if new_unit.time_count != 0 {
+            if self.time_count != 0 {
+                new_unit.time_unit = self.time_unit;
+            } else {
+                new_unit.time_unit = other.time_unit.clone();
+            }
+        } else {
+            new_unit.time_unit = TimeUnit::None;
+        }
         new_unit
     }
 
     fn divide_units(self, other: &EngUnit) -> EngUnit {
-        let mut other_reciprocal = other.clone();
-        other_reciprocal.value = 1.0 / other.value;
-        other_reciprocal.length_count *= -1;
-        other_reciprocal.mass_count *= -1;
-        other_reciprocal.time_count *= -1;
-        other_reciprocal.temperature_count *= -1;
-        other_reciprocal.electric_current_count *= -1;
-        other_reciprocal.luminous_intensity_count *= -1;
-        other_reciprocal.amount_of_substance_count *= -1;
-        other_reciprocal.length_count *= -1;
-        self.multiply_units(&other_reciprocal)
+        let recip = other.reciprocal();
+        self.multiply_units(&recip)
+    }
+
+    fn reciprocal(&self) -> EngUnit {
+        let mut recip = self.clone();
+        recip.value = 1.0 / recip.value;
+        recip.amount_of_substance_count *= -1;
+        recip.electric_current_count *= -1;
+        recip.length_count *= -1;
+        recip.luminous_intensity_count *= -1;
+        recip.mass_count *= -1;
+        recip.temperature_count *= -1;
+        recip.time_count *= -1;
+        recip
     }
 }
 
@@ -482,6 +545,7 @@ impl ops::Mul<&EngUnit> for f64 {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::temperature;
 
     #[test]
     fn new_eng_unt() {
@@ -662,37 +726,25 @@ mod tests {
 
     #[test]
     fn temperature_c_div_c() {
-        let mut unit_1 = EngUnit::new();
-        unit_1.value = 100.0;
-        unit_1.temperature_count = 1;
-        unit_1.temperature_unit = TemperatureDeltaUnit::C;
-        let mut unit_2 = EngUnit::new();
-        unit_2.value = 100.0;
-        unit_2.temperature_count = -1;
-        unit_2.temperature_unit = TemperatureDeltaUnit::C;
-        let unit_3 = unit_1 * unit_2;
-        assert_eq!(1.0, unit_3.value);
+        let unit_1 = temperature!(1.0, TemperatureDeltaUnit::C);
+        let unit_2 = temperature!(2.0, TemperatureDeltaUnit::C);
+        let unit_3 = unit_1 / unit_2;
+        assert_eq!(0.5, unit_3.value);
+        assert_eq!("0.50", unit_3.to_string());
         assert_eq!(0, unit_3.temperature_count);
         assert_eq!(TemperatureDeltaUnit::None, unit_3.temperature_unit);
-        assert_eq!(false, unit_3.has_units())
+        assert!(!unit_3.has_units())
     }
 
     #[test]
-    fn temperature_c_div_f() {
-        let mut unit_1 = EngUnit::new();
-        unit_1.value = 100.0;
-        unit_1.temperature_count = 1;
-        unit_1.temperature_unit = TemperatureDeltaUnit::C;
-        let mut unit_2 = EngUnit::new();
-        unit_2.value = 100.0;
-        unit_2.temperature_count = -1;
-        unit_2.temperature_unit = TemperatureDeltaUnit::F;
-        let expected = 100.0 / (100.0 * 5.0 / 9.0);
-        let unit_3 = unit_1 * unit_2;
-        let diff = f64::abs(unit_3.value - expected);
-        assert!(diff < 0.00001);
-        assert_eq!(0, unit_3.temperature_count);
+    fn temperature_k_div_r() {
+        let unit_1 = temperature!(1.0, TemperatureDeltaUnit::K);
+        let unit_2 = temperature!(1.0, TemperatureDeltaUnit::R);
+        let unit_3 = unit_1 / unit_2;
+        let expected = 9.0 / 5.0;
+        assert!(f64::abs(expected - unit_3.value) < 0.000001);
+        assert_eq!("1.80", unit_3.to_string());
         assert_eq!(TemperatureDeltaUnit::None, unit_3.temperature_unit);
-        assert_eq!(false, unit_3.has_units())
+        assert!(!unit_3.has_units())
     }
 }

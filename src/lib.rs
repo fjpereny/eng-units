@@ -43,13 +43,13 @@ mod tests {
         assert_eq!("4.00 kg·°C/s", double.to_string());
     }
 
-    // #[test]
-    // fn test_2() {
-    //     let temp_1 = temperature!(1.0, TemperatureDeltaUnit::K);
-    //     let mass_1 = mass!(1.0, MassUnit::Pound);
-    //     let t_1 = time!(1.0, TimeUnit::Minute);
-    //     let unit = temp_1 * mass_1 / t_1 * 123.45;
-    //     assert_eq!(123.45, unit.value);
-    //     assert_eq!("123.45 lb·K/min", unit.to_string());
-    // }
+    #[test]
+    fn test_2() {
+        let temp_1 = temperature!(1.0, TemperatureDeltaUnit::K);
+        let mass_1 = mass!(1.0, MassUnit::Pound);
+        let t_1 = time!(1.0, TimeUnit::Minute);
+        let unit = temp_1 * mass_1 / t_1 * 123.45;
+        assert_eq!(123.45, unit.value);
+        assert_eq!("123.45 lb·K/min", unit.to_string());
+    }
 }
