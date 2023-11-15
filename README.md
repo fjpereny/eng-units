@@ -9,7 +9,7 @@
 
 ## Project Goals
 - Easy to use engineering units and calculations
-- No node panics
+- No panics
 - No dependencies
 - 100% testing coverage
 
@@ -49,6 +49,9 @@ let canceled_out = flip * mass_2;
 assert_eq!(2.50, canceled_out.value);
 assert_eq!("2.50 s/°C", canceled_out.to_string());
 ```
+
+## Test coverage status
+
 
 ## License
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
