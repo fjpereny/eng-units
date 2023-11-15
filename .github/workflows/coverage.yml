@@ -10,9 +10,9 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs: 
-  test-nix:
+  test-coverage:
     runs-on: ubuntu-latest
     steps:
     - uses: taiki-e/install-action@cargo-llvm-cov
     - name: Run tests
-      run: cargo llvm-cov --html --manifest-path ../../Cargo.toml
+      run: cargo llvm-cov --html --manifest-path "/home/runner/work/eng-units/eng-units"
