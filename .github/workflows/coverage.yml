@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: taiki-e/install-action@cargo-llvm-cov
     - name: Run tests
-      run: cargo llvm-cov --html --manifest-path "/home/runner/work/eng-units/eng-units"
+      run: cargo llvm-cov --html --manifest-path "/home/runner/work/eng-units/eng-units/Cargo.toml"
