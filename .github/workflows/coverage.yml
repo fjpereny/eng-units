@@ -13,6 +13,8 @@ jobs:
   test-nix:
     runs-on: ubuntu-latest
     steps:
-    - uses: taiki-e/install-action@cargo-llvm-cov
+    - uses: taiki-e/install-action@v2
+      with:
+        tool: cargo-hack
     - name: Run tests
       run: cargo llvm-cov --html
