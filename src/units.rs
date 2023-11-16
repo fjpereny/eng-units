@@ -305,17 +305,17 @@ impl EngUnit {
         } else if T::is_time_unit() {
             let from_unit = &self.time_unit;
             let to_unit = EngUnit::to_time_unit(to_unit);
-            let mut conversion_factor = TimeUnit::conversion_factor(from_unit, &to_unit);
-            conversion_factor = f64::powf(conversion_factor, self.time_count as f64);
-            match self.time_count.cmp(&0) {
-                Ordering::Greater => {
-                    new_unit.value *= conversion_factor;
-                }
-                Ordering::Less => {
-                    new_unit.value /= conversion_factor;
-                }
-                Ordering::Equal => {}
-            }
+            let conversion_factor = TimeUnit::conversion_factor(from_unit, &to_unit);
+            new_unit.value *= f64::powf(conversion_factor, self.time_count as f64);
+            // match self.time_count.cmp(&0) {
+            //     Ordering::Greater => {
+            //         new_unit.value *= conversion_factor;
+            //     }
+            //     Ordering::Less => {
+            //         new_unit.value /= conversion_factor;
+            //     }
+            //     Ordering::Equal => {}
+            // }
             new_unit.time_unit = to_unit;
         }
         new_unit
@@ -754,8 +754,8 @@ impl ops::Mul<&EngUnit> for f64 {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::temperature;
+    use crate::*;
 
     #[test]
     fn new_eng_unt() {
