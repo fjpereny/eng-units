@@ -1,6 +1,6 @@
 #[macro_export]
-macro_rules! enthalpy_J {
-    ($value:literal) => {{
+macro_rules! Joule {
+    ($value:expr) => {{
         let mut unit = EngUnit::new();
         unit.value = $value;
         unit.mass_count = 1;
@@ -14,7 +14,21 @@ macro_rules! enthalpy_J {
 }
 
 #[macro_export]
-macro_rules! entropy_J {
+macro_rules! energy_J {
+    ($value:literal) => {{
+        Joule! {$value}
+    }};
+}
+
+#[macro_export]
+macro_rules! energy_kJ {
+    ($value:literal) => {{
+        Joule! {($value * 1000.0)}
+    }};
+}
+
+#[macro_export]
+macro_rules! entropy_J_per_K {
     ($value:literal) => {{
         let mut unit = EngUnit::new();
         unit.value = $value;

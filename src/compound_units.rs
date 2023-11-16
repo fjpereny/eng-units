@@ -72,6 +72,8 @@ impl CompoundUnit {
 }
 #[cfg(test)]
 mod tests {
+    use crate::energy_J;
+    use crate::energy_kJ;
     use crate::AmountOfSubstanceUnit;
     use crate::ElectricCurrentUnit;
     use crate::EngUnit;
@@ -80,11 +82,11 @@ mod tests {
     use crate::MassUnit;
     use crate::TemperatureDeltaUnit;
     use crate::TimeUnit;
-    use crate::{enthalpy_J, entropy_J};
+    use crate::{entropy_J_per_K, Joule};
 
     #[test]
     fn test_1() {
-        let unit = enthalpy_J!(123.45);
+        let unit = Joule!(123.45);
         assert_eq!(123.45, unit.value);
         assert_eq!("123.45 kg·m^2/s^2", unit.to_string());
         assert_eq!(AmountOfSubstanceUnit::None, unit.amount_of_substance_unit);
@@ -105,9 +107,9 @@ mod tests {
 
     #[test]
     fn test_2() {
-        let unit = entropy_J!(123.45);
+        let unit = energy_J!(123.45);
         assert_eq!(123.45, unit.value);
-        assert_eq!("123.45 kg·m^2/s^2·K", unit.to_string());
+        assert_eq!("123.45 kg·m^2/s^2", unit.to_string());
         assert_eq!(AmountOfSubstanceUnit::None, unit.amount_of_substance_unit);
         assert_eq!(ElectricCurrentUnit::None, unit.electric_current_unit);
         assert_eq!(LengthUnit::Meter, unit.length_unit);
@@ -116,6 +118,48 @@ mod tests {
         assert_eq!(TemperatureDeltaUnit::None, unit.temperature_unit);
         assert_eq!(TimeUnit::Second, unit.time_unit);
         assert_eq!(0, unit.temperature_count);
+        assert_eq!(-2, unit.time_count);
+        assert_eq!(2, unit.length_count);
+        assert_eq!(1, unit.mass_count);
+        assert_eq!(0, unit.luminous_intensity_count);
+        assert_eq!(0, unit.amount_of_substance_count);
+        assert_eq!(0, unit.electric_current_count);
+    }
+
+    #[test]
+    fn test_kj() {
+        let unit = energy_kJ!(123.45);
+        assert_eq!(123450.0, unit.value);
+        assert_eq!("123450.00 kg·m^2/s^2", unit.to_string());
+        assert_eq!(AmountOfSubstanceUnit::None, unit.amount_of_substance_unit);
+        assert_eq!(ElectricCurrentUnit::None, unit.electric_current_unit);
+        assert_eq!(LengthUnit::Meter, unit.length_unit);
+        assert_eq!(LuminousIntensityUnit::None, unit.luminous_intensity_unit);
+        assert_eq!(MassUnit::Kilogram, unit.mass_unit);
+        assert_eq!(TemperatureDeltaUnit::None, unit.temperature_unit);
+        assert_eq!(TimeUnit::Second, unit.time_unit);
+        assert_eq!(0, unit.temperature_count);
+        assert_eq!(-2, unit.time_count);
+        assert_eq!(2, unit.length_count);
+        assert_eq!(1, unit.mass_count);
+        assert_eq!(0, unit.luminous_intensity_count);
+        assert_eq!(0, unit.amount_of_substance_count);
+        assert_eq!(0, unit.electric_current_count);
+    }
+
+    #[test]
+    fn test_3() {
+        let unit = entropy_J_per_K!(123.45);
+        assert_eq!(123.45, unit.value);
+        assert_eq!("123.45 kg·m^2/s^2·K", unit.to_string());
+        assert_eq!(AmountOfSubstanceUnit::None, unit.amount_of_substance_unit);
+        assert_eq!(ElectricCurrentUnit::None, unit.electric_current_unit);
+        assert_eq!(LengthUnit::Meter, unit.length_unit);
+        assert_eq!(LuminousIntensityUnit::None, unit.luminous_intensity_unit);
+        assert_eq!(MassUnit::Kilogram, unit.mass_unit);
+        assert_eq!(TemperatureDeltaUnit::K, unit.temperature_unit);
+        assert_eq!(TimeUnit::Second, unit.time_unit);
+        assert_eq!(-1, unit.temperature_count);
         assert_eq!(-2, unit.time_count);
         assert_eq!(2, unit.length_count);
         assert_eq!(1, unit.mass_count);

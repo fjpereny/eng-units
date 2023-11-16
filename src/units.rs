@@ -323,15 +323,15 @@ impl EngUnit {
             let to_unit = EngUnit::to_time_unit(to_unit);
             let conversion_factor = TimeUnit::conversion_factor(from_unit, &to_unit);
             new_unit.value *= f64::powf(conversion_factor, self.time_count as f64);
-            // match self.time_count.cmp(&0) {
-            //     Ordering::Greater => {
-            //         new_unit.value *= conversion_factor;
-            //     }
-            //     Ordering::Less => {
-            //         new_unit.value /= conversion_factor;
-            //     }
-            //     Ordering::Equal => {}
-            // }
+            match self.time_count.cmp(&0) {
+                Ordering::Greater => {
+                    new_unit.value *= conversion_factor;
+                }
+                Ordering::Less => {
+                    new_unit.value /= conversion_factor;
+                }
+                Ordering::Equal => {}
+            }
             new_unit.time_unit = to_unit;
         }
         new_unit
@@ -366,7 +366,6 @@ impl EngUnit {
         let mut s_numerator: Vec<String> = Vec::new();
         let mut s_denominator: Vec<String> = Vec::new();
 
-        // String Numerator
         if self.amount_of_substance_count >= 2 {
             let s = format!(
                 "{}^{}",
@@ -434,23 +433,55 @@ impl EngUnit {
         }
 
         // String Denominator
+        if self.amount_of_substance_count <= -2 {
+            let s = format!(
+                "{}^{}",
+                self.amount_of_substance_unit.to_string(),
+                self.amount_of_substance_count
+            );
+            s_denominator.push(s);
+        } else if self.amount_of_substance_count == -1 {
+            let s = self.amount_of_substance_unit.to_string();
+            s_denominator.push(s.to_string());
+        }
+
+        if self.electric_current_count <= -2 {
+            let s = format!(
+                "{}^{}",
+                self.electric_current_unit.to_string(),
+                self.electric_current_count
+            );
+            s_denominator.push(s);
+        } else if self.electric_current_count == -1 {
+            let s = self.electric_current_unit.to_string();
+            s_denominator.push(s.to_string());
+        }
+
+        if self.length_count <= -2 {
+            let s = format!("{}^{}", self.length_unit.to_string(), self.length_count);
+            s_denominator.push(s);
+        } else if self.length_count == -1 {
+            let s = self.length_unit.to_string();
+            s_denominator.push(s.to_string());
+        }
+
+        if self.luminous_intensity_count <= -2 {
+            let s = format!(
+                "{}^{}",
+                self.luminous_intensity_unit.to_string(),
+                self.luminous_intensity_count
+            );
+            s_denominator.push(s);
+        } else if self.luminous_intensity_count == -1 {
+            let s = self.luminous_intensity_unit.to_string();
+            s_denominator.push(s.to_string());
+        }
+
         if self.mass_count <= -2 {
             let s = format!("{}^{}", self.mass_unit.to_string(), self.mass_count);
             s_denominator.push(s);
         } else if self.mass_count == -1 {
             let s = self.mass_unit.to_string();
-            s_denominator.push(s.to_string());
-        }
-
-        if self.temperature_count <= -2 {
-            let s = format!(
-                "{}^{}",
-                self.temperature_unit.to_string(),
-                self.temperature_count
-            );
-            s_denominator.push(s);
-        } else if self.temperature_count == -1 {
-            let s = self.temperature_unit.to_string();
             s_denominator.push(s.to_string());
         }
 
@@ -463,6 +494,18 @@ impl EngUnit {
             s_denominator.push(s);
         } else if self.time_count == -1 {
             let s = self.time_unit.to_string();
+            s_denominator.push(s.to_string());
+        }
+
+        if self.temperature_count <= -2 {
+            let s = format!(
+                "{}^{}",
+                self.temperature_unit.to_string(),
+                self.temperature_count
+            );
+            s_denominator.push(s);
+        } else if self.temperature_count == -1 {
+            let s = self.temperature_unit.to_string();
             s_denominator.push(s.to_string());
         }
 
