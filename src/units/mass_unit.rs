@@ -1,4 +1,10 @@
+use crate::units::AmountOfSubstanceUnit;
+use crate::units::ElectricCurrentUnit;
 use crate::units::IsEngUnitType;
+use crate::units::LengthUnit;
+use crate::units::LuminousIntensityUnit;
+use crate::units::TemperatureDeltaUnit;
+use crate::units::TimeUnit;
 
 #[macro_export]
 macro_rules! mass {
@@ -21,6 +27,61 @@ pub enum MassUnit {
     None,
 }
 
+impl<
+        T: IsEngUnitType
+            + Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    > From<&T> for MassUnit
+{
+    fn from(value: &T) -> Self {
+        if T::is_amount_unit() {
+            value.into()
+        } else {
+            Self::None
+        }
+    }
+}
+impl IsEngUnitType for MassUnit {
+    fn is_mass_unit() -> bool {
+        true
+    }
+}
+impl From<AmountOfSubstanceUnit> for MassUnit {
+    fn from(_: AmountOfSubstanceUnit) -> Self {
+        MassUnit::None
+    }
+}
+impl From<ElectricCurrentUnit> for MassUnit {
+    fn from(_: ElectricCurrentUnit) -> Self {
+        MassUnit::None
+    }
+}
+impl From<LengthUnit> for MassUnit {
+    fn from(_: LengthUnit) -> Self {
+        MassUnit::None
+    }
+}
+impl From<LuminousIntensityUnit> for MassUnit {
+    fn from(_: LuminousIntensityUnit) -> Self {
+        MassUnit::None
+    }
+}
+impl From<TemperatureDeltaUnit> for MassUnit {
+    fn from(_: TemperatureDeltaUnit) -> Self {
+        MassUnit::None
+    }
+}
+impl From<TimeUnit> for MassUnit {
+    fn from(_: TimeUnit) -> Self {
+        MassUnit::None
+    }
+}
+
 pub const KILOGRAM_TO_POUND: f64 = 2.204_622_62;
 
 impl MassUnit {
@@ -30,10 +91,6 @@ impl MassUnit {
             MassUnit::Pound => "lb",
             MassUnit::None => "",
         }
-    }
-
-    pub fn get_unit<T: Into<MassUnit>>(unit: T) -> MassUnit {
-        unit.into()
     }
 
     pub fn conversion_factor(from: &MassUnit, to: &MassUnit) -> f64 {
@@ -50,12 +107,6 @@ impl MassUnit {
             },
             MassUnit::None => 1.0,
         }
-    }
-}
-
-impl IsEngUnitType for MassUnit {
-    fn is_mass_unit() -> bool {
-        true
     }
 }
 

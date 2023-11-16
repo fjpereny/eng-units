@@ -1,3 +1,11 @@
+use crate::units::AmountOfSubstanceUnit;
+use crate::units::ElectricCurrentUnit;
+use crate::units::IsEngUnitType;
+use crate::units::LengthUnit;
+use crate::units::LuminousIntensityUnit;
+use crate::units::MassUnit;
+use crate::units::TimeUnit;
+
 #[macro_export]
 macro_rules! temperature {
     ($value:literal, $unit:expr) => {{
@@ -19,6 +27,61 @@ pub enum TemperatureDeltaUnit {
     F,
     K,
     None,
+}
+
+impl<
+        T: IsEngUnitType
+            + Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    > From<&T> for TemperatureDeltaUnit
+{
+    fn from(value: &T) -> Self {
+        if T::is_amount_unit() {
+            value.into()
+        } else {
+            Self::None
+        }
+    }
+}
+impl IsEngUnitType for TemperatureDeltaUnit {
+    fn is_temperature_unit() -> bool {
+        true
+    }
+}
+impl From<AmountOfSubstanceUnit> for TemperatureDeltaUnit {
+    fn from(_: AmountOfSubstanceUnit) -> Self {
+        TemperatureDeltaUnit::None
+    }
+}
+impl From<ElectricCurrentUnit> for TemperatureDeltaUnit {
+    fn from(_: ElectricCurrentUnit) -> Self {
+        TemperatureDeltaUnit::None
+    }
+}
+impl From<LengthUnit> for TemperatureDeltaUnit {
+    fn from(_: LengthUnit) -> Self {
+        TemperatureDeltaUnit::None
+    }
+}
+impl From<LuminousIntensityUnit> for TemperatureDeltaUnit {
+    fn from(_: LuminousIntensityUnit) -> Self {
+        TemperatureDeltaUnit::None
+    }
+}
+impl From<MassUnit> for TemperatureDeltaUnit {
+    fn from(_: MassUnit) -> Self {
+        TemperatureDeltaUnit::None
+    }
+}
+impl From<TimeUnit> for TemperatureDeltaUnit {
+    fn from(_: TimeUnit) -> Self {
+        TemperatureDeltaUnit::None
+    }
 }
 
 impl TemperatureDeltaUnit {

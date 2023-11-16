@@ -1,3 +1,11 @@
+use crate::units::AmountOfSubstanceUnit;
+use crate::units::ElectricCurrentUnit;
+use crate::units::IsEngUnitType;
+use crate::units::LengthUnit;
+use crate::units::LuminousIntensityUnit;
+use crate::units::MassUnit;
+use crate::units::TemperatureDeltaUnit;
+
 #[macro_export]
 macro_rules! time {
     ($value:literal, $unit:expr) => {{
@@ -18,6 +26,61 @@ pub enum TimeUnit {
     Minute,
     Hour,
     None,
+}
+
+impl<
+        T: IsEngUnitType
+            + Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    > From<&T> for TimeUnit
+{
+    fn from(value: &T) -> Self {
+        if T::is_amount_unit() {
+            value.into()
+        } else {
+            Self::None
+        }
+    }
+}
+impl IsEngUnitType for TimeUnit {
+    fn is_time_unit() -> bool {
+        true
+    }
+}
+impl From<AmountOfSubstanceUnit> for TimeUnit {
+    fn from(_: AmountOfSubstanceUnit) -> Self {
+        TimeUnit::None
+    }
+}
+impl From<ElectricCurrentUnit> for TimeUnit {
+    fn from(_: ElectricCurrentUnit) -> Self {
+        TimeUnit::None
+    }
+}
+impl From<LengthUnit> for TimeUnit {
+    fn from(_: LengthUnit) -> Self {
+        TimeUnit::None
+    }
+}
+impl From<LuminousIntensityUnit> for TimeUnit {
+    fn from(_: LuminousIntensityUnit) -> Self {
+        TimeUnit::None
+    }
+}
+impl From<MassUnit> for TimeUnit {
+    fn from(_: MassUnit) -> Self {
+        TimeUnit::None
+    }
+}
+impl From<TemperatureDeltaUnit> for TimeUnit {
+    fn from(_: TemperatureDeltaUnit) -> Self {
+        TimeUnit::None
+    }
 }
 
 pub const MINUTE_TO_SECONDS: f64 = 60.0;

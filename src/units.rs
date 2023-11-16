@@ -14,6 +14,7 @@ use crate::units::mass_unit::MassUnit;
 use crate::units::temperature_unit::TemperatureDeltaUnit;
 use crate::units::time_unit::TimeUnit;
 
+use std::cmp::Ordering;
 use std::fmt::Display;
 use std::ops;
 
@@ -63,7 +64,7 @@ pub trait IsEngUnitType {
     fn is_electric_current_unit() -> bool {
         false
     }
-    fn is_legnth_unit() -> bool {
+    fn is_length_unit() -> bool {
         false
     }
     fn is_luminous_unit() -> bool {
@@ -73,6 +74,9 @@ pub trait IsEngUnitType {
         false
     }
     fn is_temperature_unit() -> bool {
+        false
+    }
+    fn is_time_unit() -> bool {
         false
     }
 }
@@ -98,19 +102,221 @@ impl EngUnit {
         }
     }
 
-    pub fn convert<T: IsEngUnitType + Into<MassUnit>>(&self, to_unit: T) -> Self {
+    fn to_amount_unit<
+        T: Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    >(
+        unit: T,
+    ) -> AmountOfSubstanceUnit {
+        unit.into()
+    }
+    fn to_electric_unit<
+        T: Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    >(
+        unit: T,
+    ) -> ElectricCurrentUnit {
+        unit.into()
+    }
+    fn to_length_unit<
+        T: Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    >(
+        unit: T,
+    ) -> LengthUnit {
+        unit.into()
+    }
+    fn to_luminous_unit<
+        T: Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    >(
+        unit: T,
+    ) -> LuminousIntensityUnit {
+        unit.into()
+    }
+    fn to_mass_unit<
+        T: Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    >(
+        unit: T,
+    ) -> MassUnit {
+        unit.into()
+    }
+    fn to_temperature_unit<
+        T: Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    >(
+        unit: T,
+    ) -> TemperatureDeltaUnit {
+        unit.into()
+    }
+
+    fn to_time_unit<
+        T: Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    >(
+        unit: T,
+    ) -> TimeUnit {
+        unit.into()
+    }
+
+    pub fn convert<
+        T: IsEngUnitType
+            + Into<AmountOfSubstanceUnit>
+            + Into<ElectricCurrentUnit>
+            + Into<LengthUnit>
+            + Into<LuminousIntensityUnit>
+            + Into<MassUnit>
+            + Into<TemperatureDeltaUnit>
+            + Into<TimeUnit>,
+    >(
+        &self,
+        to_unit: T,
+    ) -> Self {
         let mut new_unit = self.clone();
-        let conversion_factor;
-        if T::is_mass_unit() {
+        if T::is_amount_unit() {
+            let from_unit = &self.amount_of_substance_unit;
+            let to_unit = EngUnit::to_amount_unit(to_unit);
+            let mut conversion_factor =
+                AmountOfSubstanceUnit::conversion_factor(from_unit, &to_unit);
+            conversion_factor = f64::powf(conversion_factor, self.amount_of_substance_count as f64);
+            match self.amount_of_substance_count.cmp(&0) {
+                Ordering::Greater => {
+                    new_unit.value *= conversion_factor;
+                }
+                Ordering::Less => {
+                    new_unit.value /= conversion_factor;
+                }
+                Ordering::Equal => {}
+            }
+            new_unit.amount_of_substance_unit = to_unit;
+        } else if T::is_electric_current_unit() {
+            let from_unit = &self.electric_current_unit;
+            let to_unit = EngUnit::to_electric_unit(to_unit);
+            let mut conversion_factor = ElectricCurrentUnit::conversion_factor(from_unit, &to_unit);
+            conversion_factor = f64::powf(conversion_factor, self.electric_current_count as f64);
+            match self.electric_current_count.cmp(&0) {
+                Ordering::Greater => {
+                    new_unit.value *= conversion_factor;
+                }
+                Ordering::Less => {
+                    new_unit.value /= conversion_factor;
+                }
+                Ordering::Equal => {}
+            }
+            new_unit.electric_current_unit = to_unit;
+        } else if T::is_length_unit() {
+            let from_unit = &self.length_unit;
+            let to_unit = EngUnit::to_length_unit(to_unit);
+            let mut conversion_factor = LengthUnit::conversion_factor(from_unit, &to_unit);
+            conversion_factor = f64::powf(conversion_factor, self.length_count as f64);
+            match self.length_count.cmp(&0) {
+                Ordering::Greater => {
+                    new_unit.value *= conversion_factor;
+                }
+                Ordering::Less => {
+                    new_unit.value /= conversion_factor;
+                }
+                Ordering::Equal => {}
+            }
+            new_unit.length_unit = to_unit;
+        } else if T::is_luminous_unit() {
+            let from_unit = &self.luminous_intensity_unit;
+            let to_unit = EngUnit::to_luminous_unit(to_unit);
+            let mut conversion_factor =
+                LuminousIntensityUnit::conversion_factor(from_unit, &to_unit);
+            conversion_factor = f64::powf(conversion_factor, self.luminous_intensity_count as f64);
+            match self.luminous_intensity_count.cmp(&0) {
+                Ordering::Greater => {
+                    new_unit.value *= conversion_factor;
+                }
+                Ordering::Less => {
+                    new_unit.value /= conversion_factor;
+                }
+                Ordering::Equal => {}
+            }
+            new_unit.luminous_intensity_unit = to_unit;
+        } else if T::is_mass_unit() {
             let from_unit = &self.mass_unit;
-            let to_unit = MassUnit::get_unit(to_unit);
-            conversion_factor = MassUnit::conversion_factor(&from_unit, &to_unit);
-            if self.mass_count > 0 {
-                new_unit.value *= conversion_factor;
-            } else if self.mass_count < 0 {
-                new_unit.value /= conversion_factor;
+            let to_unit = EngUnit::to_mass_unit(to_unit);
+            let mut conversion_factor = MassUnit::conversion_factor(from_unit, &to_unit);
+            conversion_factor = f64::powf(conversion_factor, self.mass_count as f64);
+            match self.mass_count.cmp(&0) {
+                Ordering::Greater => {
+                    new_unit.value *= conversion_factor;
+                }
+                Ordering::Less => {
+                    new_unit.value /= conversion_factor;
+                }
+                Ordering::Equal => {}
             }
             new_unit.mass_unit = to_unit;
+        } else if T::is_temperature_unit() {
+            let from_unit = &self.temperature_unit;
+            let to_unit = EngUnit::to_temperature_unit(to_unit);
+            let mut conversion_factor =
+                TemperatureDeltaUnit::conversion_factor(from_unit, &to_unit);
+            conversion_factor = f64::powf(conversion_factor, self.temperature_count as f64);
+            match self.temperature_count.cmp(&0) {
+                Ordering::Greater => {
+                    new_unit.value *= conversion_factor;
+                }
+                Ordering::Less => {
+                    new_unit.value /= conversion_factor;
+                }
+                Ordering::Equal => {}
+            }
+            new_unit.temperature_unit = to_unit;
+        } else if T::is_time_unit() {
+            let from_unit = &self.time_unit;
+            let to_unit = EngUnit::to_time_unit(to_unit);
+            let mut conversion_factor = TimeUnit::conversion_factor(from_unit, &to_unit);
+            conversion_factor = f64::powf(conversion_factor, self.time_count as f64);
+            match self.time_count.cmp(&0) {
+                Ordering::Greater => {
+                    new_unit.value *= conversion_factor;
+                }
+                Ordering::Less => {
+                    new_unit.value /= conversion_factor;
+                }
+                Ordering::Equal => {}
+            }
+            new_unit.time_unit = to_unit;
         }
         new_unit
     }
@@ -137,7 +343,7 @@ impl EngUnit {
         if self.amount_of_substance_count != 0 {
             return true;
         }
-        return false;
+        false
     }
 
     pub fn unit_to_string(&self) -> String {
@@ -302,7 +508,7 @@ impl EngUnit {
             s_denominator.push(s.to_string());
         }
 
-        let mut s_output = String::from(format!("${}\\ ", self.value));
+        let mut s_output = format!("${}\\ ", self.value);
         for s in s_numerator.iter() {
             s_output.push_str(s);
         }
@@ -313,7 +519,7 @@ impl EngUnit {
         for s in s_denominator.iter() {
             s_output.push_str(s);
         }
-        s_output.push_str("$");
+        s_output.push('$');
         s_output
     }
 
@@ -330,35 +536,35 @@ impl EngUnit {
         new_unit.temperature_count = self.temperature_count + other.temperature_count;
         new_unit.time_count = self.time_count + other.time_count;
 
-        // let mut amount_conversion_factor = AmountOfSubstanceUnit::conversion_factor(
-        //     &other.amount_of_substance_unit,
-        //     &self.amount_of_substance_unit,
-        // );
-        // if other.amount_of_substance_count < 0 {
-        //     amount_conversion_factor = 1.0 / amount_conversion_factor;
-        // }
+        let mut amount_conversion_factor = AmountOfSubstanceUnit::conversion_factor(
+            &other.amount_of_substance_unit,
+            &self.amount_of_substance_unit,
+        );
+        if other.amount_of_substance_count < 0 {
+            amount_conversion_factor = 1.0 / amount_conversion_factor;
+        }
 
-        // let mut electric_conversion_factor = ElectricCurrentUnit::conversion_factor(
-        //     &other.electric_current_unit,
-        //     &self.electric_current_unit,
-        // );
-        // if other.electric_current_count < 0 {
-        //     electric_conversion_factor = 1.0 / electric_conversion_factor;
-        // }
+        let mut electric_conversion_factor = ElectricCurrentUnit::conversion_factor(
+            &other.electric_current_unit,
+            &self.electric_current_unit,
+        );
+        if other.electric_current_count < 0 {
+            electric_conversion_factor = 1.0 / electric_conversion_factor;
+        }
 
-        // let mut length_conversion_factor =
-        //     LengthUnit::conversion_factor(&other.length_unit, &self.length_unit);
-        // if other.length_count < 0 {
-        //     length_conversion_factor = 1.0 / length_conversion_factor;
-        // }
+        let mut length_conversion_factor =
+            LengthUnit::conversion_factor(&other.length_unit, &self.length_unit);
+        if other.length_count < 0 {
+            length_conversion_factor = 1.0 / length_conversion_factor;
+        }
 
-        // let mut luminous_conversion_factor = LuminousIntensityUnit::conversion_factor(
-        //     &other.luminous_intensity_unit,
-        //     &self.luminous_intensity_unit,
-        // );
-        // if other.luminous_intensity_count < 0 {
-        //     luminous_conversion_factor = 1.0 / luminous_conversion_factor;
-        // }
+        let mut luminous_conversion_factor = LuminousIntensityUnit::conversion_factor(
+            &other.luminous_intensity_unit,
+            &self.luminous_intensity_unit,
+        );
+        if other.luminous_intensity_count < 0 {
+            luminous_conversion_factor = 1.0 / luminous_conversion_factor;
+        }
 
         let mut mass_conversion_factor =
             MassUnit::conversion_factor(&other.mass_unit, &self.mass_unit);
@@ -381,10 +587,10 @@ impl EngUnit {
         }
 
         new_unit.value = self.value * other.value;
-        // new_unit.value *= amount_conversion_factor;
-        // new_unit.value *= electric_conversion_factor;
-        // new_unit.value *= length_conversion_factor;
-        // new_unit.value *= luminous_conversion_factor;
+        new_unit.value *= amount_conversion_factor;
+        new_unit.value *= electric_conversion_factor;
+        new_unit.value *= length_conversion_factor;
+        new_unit.value *= luminous_conversion_factor;
         new_unit.value *= mass_conversion_factor;
         new_unit.value *= temperature_conversion_factor;
         new_unit.value *= time_conversion_factor;
