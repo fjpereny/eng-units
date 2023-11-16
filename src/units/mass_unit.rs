@@ -6,6 +6,7 @@ use crate::units::LuminousIntensityUnit;
 use crate::units::TemperatureDeltaUnit;
 use crate::units::TimeUnit;
 
+/// Create new unit of mass
 #[macro_export]
 macro_rules! mass {
     ($value:literal, $unit:expr) => {{

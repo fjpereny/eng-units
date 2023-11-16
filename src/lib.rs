@@ -1,11 +1,19 @@
 pub mod units;
 
+pub use units::amount_of_substance_unit::AmountOfSubstanceUnit;
+pub use units::electric_current_unit::ElectricCurrentUnit;
+pub use units::length_unit::LengthUnit;
+pub use units::mass_unit::MassUnit;
+pub use units::temperature_unit::TemperatureDeltaUnit;
+pub use units::time_unit::TimeUnit;
+pub use units::EngUnit;
+
 #[cfg(test)]
 mod tests {
-    // use crate::units::amount_of_substance_unit::AmountOfSubstanceUnit;
-    // use crate::units::electric_current_unit::ElectricCurrentUnit;
-    // use crate::units::length_unit::LengthUnit;
-    // use crate::units::luminous_intensity_unit::LuminousIntensityUnit;
+    use crate::units::amount_of_substance_unit::AmountOfSubstanceUnit;
+    use crate::units::electric_current_unit::ElectricCurrentUnit;
+    use crate::units::length_unit::LengthUnit;
+    use crate::units::luminous_intensity_unit::LuminousIntensityUnit;
     use crate::units::mass_unit::MassUnit;
     use crate::units::temperature_unit::TemperatureDeltaUnit;
     use crate::units::time_unit::TimeUnit;
