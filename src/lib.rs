@@ -14,11 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+pub mod compound_units;
 pub mod units;
 
 pub use units::amount_of_substance_unit::AmountOfSubstanceUnit;
 pub use units::electric_current_unit::ElectricCurrentUnit;
 pub use units::length_unit::LengthUnit;
+pub use units::luminous_intensity_unit::LuminousIntensityUnit;
 pub use units::mass_unit::MassUnit;
 pub use units::temperature_unit::TemperatureDeltaUnit;
 pub use units::time_unit::TimeUnit;

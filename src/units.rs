@@ -37,20 +37,20 @@ use std::ops;
 #[derive(Clone, Debug)]
 pub struct EngUnit {
     pub value: f64,
+    pub amount_of_substance_count: i32,
+    pub amount_of_substance_unit: AmountOfSubstanceUnit,
+    pub electric_current_count: i32,
+    pub electric_current_unit: ElectricCurrentUnit,
     pub length_count: i32,
     pub length_unit: LengthUnit,
-    pub time_count: i32,
-    pub time_unit: TimeUnit,
+    pub luminous_intensity_count: i32,
+    pub luminous_intensity_unit: LuminousIntensityUnit,
     pub mass_count: i32,
     pub mass_unit: MassUnit,
     pub temperature_count: i32,
     pub temperature_unit: TemperatureDeltaUnit,
-    pub electric_current_count: i32,
-    pub electric_current_unit: ElectricCurrentUnit,
-    pub luminous_intensity_count: i32,
-    pub luminous_intensity_unit: LuminousIntensityUnit,
-    pub amount_of_substance_count: i32,
-    pub amount_of_substance_unit: AmountOfSubstanceUnit,
+    pub time_count: i32,
+    pub time_unit: TimeUnit,
 }
 
 impl Default for EngUnit {
@@ -367,6 +367,28 @@ impl EngUnit {
         let mut s_denominator: Vec<String> = Vec::new();
 
         // String Numerator
+        if self.amount_of_substance_count >= 2 {
+            let s = format!(
+                "{}^{}",
+                self.amount_of_substance_unit.to_string(),
+                self.amount_of_substance_count
+            );
+            s_numerator.push(s);
+        } else if self.amount_of_substance_count == 1 {
+            let s = self.amount_of_substance_unit.to_string();
+            s_numerator.push(s.to_string());
+        }
+        if self.electric_current_count >= 2 {
+            let s = format!(
+                "{}^{}",
+                self.electric_current_unit.to_string(),
+                self.electric_current_count
+            );
+            s_numerator.push(s);
+        } else if self.electric_current_count == 1 {
+            let s = self.electric_current_unit.to_string();
+            s_numerator.push(s.to_string());
+        }
         if self.mass_count >= 2 {
             let s = format!("{}^{}", self.mass_unit.to_string(), self.mass_count);
             s_numerator.push(s);
@@ -374,7 +396,31 @@ impl EngUnit {
             let s = self.mass_unit.to_string();
             s_numerator.push(s.to_string());
         }
-
+        if self.length_count >= 2 {
+            let s = format!("{}^{}", self.length_unit.to_string(), self.length_count);
+            s_numerator.push(s);
+        } else if self.length_count == 1 {
+            let s = self.length_unit.to_string();
+            s_numerator.push(s.to_string());
+        }
+        if self.luminous_intensity_count >= 2 {
+            let s = format!(
+                "{}^{}",
+                self.luminous_intensity_unit.to_string(),
+                self.luminous_intensity_count
+            );
+            s_numerator.push(s);
+        } else if self.luminous_intensity_count == 1 {
+            let s = self.luminous_intensity_unit.to_string();
+            s_numerator.push(s.to_string());
+        }
+        if self.time_count >= 2 {
+            let s = format!("{}^{}", self.time_unit.to_string(), self.time_count);
+            s_numerator.push(s);
+        } else if self.time_count == 1 {
+            let s = self.time_unit.to_string();
+            s_numerator.push(s.to_string());
+        }
         if self.temperature_count >= 2 {
             let s = format!(
                 "{}^{}",
@@ -384,14 +430,6 @@ impl EngUnit {
             s_numerator.push(s);
         } else if self.temperature_count == 1 {
             let s = self.temperature_unit.to_string();
-            s_numerator.push(s.to_string());
-        }
-
-        if self.time_count >= 2 {
-            let s = format!("{}^{}", self.time_unit.to_string(), self.time_count);
-            s_numerator.push(s);
-        } else if self.time_count == 1 {
-            let s = self.time_unit.to_string();
             s_numerator.push(s.to_string());
         }
 
@@ -766,6 +804,53 @@ impl ops::Mul<&EngUnit> for f64 {
         new_unit.value *= self;
         new_unit
     }
+}
+
+pub fn same_units(unit_1: &EngUnit, unit_2: &EngUnit) -> bool {
+    if unit_1.amount_of_substance_unit != unit_2.amount_of_substance_unit {
+        return false;
+    }
+    if unit_1.electric_current_unit != unit_2.electric_current_unit {
+        return false;
+    }
+    if unit_1.length_unit != unit_2.length_unit {
+        return false;
+    }
+    if unit_1.luminous_intensity_unit != unit_2.luminous_intensity_unit {
+        return false;
+    }
+    if unit_1.mass_unit != unit_2.mass_unit {
+        return false;
+    }
+    if unit_1.temperature_unit != unit_2.temperature_unit {
+        return false;
+    }
+    if unit_1.time_unit != unit_2.time_unit {
+        return false;
+    }
+
+    if unit_1.amount_of_substance_count != unit_2.amount_of_substance_count {
+        return false;
+    }
+    if unit_1.electric_current_count != unit_2.electric_current_count {
+        return false;
+    }
+    if unit_1.length_count != unit_2.length_count {
+        return false;
+    }
+    if unit_1.luminous_intensity_count != unit_2.luminous_intensity_count {
+        return false;
+    }
+    if unit_1.mass_count != unit_2.mass_count {
+        return false;
+    }
+    if unit_1.temperature_count != unit_2.temperature_count {
+        return false;
+    }
+    if unit_1.time_count != unit_2.time_count {
+        return false;
+    }
+    true
 }
 
 #[cfg(test)]
