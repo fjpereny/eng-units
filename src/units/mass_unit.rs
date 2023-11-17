@@ -37,6 +37,28 @@ macro_rules! mass {
     }};
 }
 
+#[macro_export]
+macro_rules! mass_kg {
+    ($value:expr) => {{
+        let mut unit = EngUnit::new();
+        unit.value = $value;
+        unit.mass_count = 1;
+        unit.mass_unit = MassUnit::Kilogram;
+        unit
+    }};
+}
+
+#[macro_export]
+macro_rules! mass_lb {
+    ($value:expr) => {{
+        let mut unit = EngUnit::new();
+        unit.value = $value;
+        unit.mass_count = 1;
+        unit.mass_unit = MassUnit::Pound;
+        unit
+    }};
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum MassUnit {
     Kilogram,

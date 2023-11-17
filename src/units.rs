@@ -16,12 +16,15 @@
 
 pub mod amount_of_substance_unit;
 pub mod electric_current_unit;
+pub mod energy_unit;
 pub mod length_unit;
 pub mod luminous_intensity_unit;
 pub mod mass_unit;
+pub mod power_unit;
 pub mod temperature_unit;
 pub mod time_unit;
 
+use crate::complex_units::ComplexUnit;
 use crate::units::amount_of_substance_unit::AmountOfSubstanceUnit;
 use crate::units::electric_current_unit::ElectricCurrentUnit;
 use crate::units::length_unit::LengthUnit;
@@ -781,6 +784,8 @@ impl EngUnit {
         recip.time_count *= -1;
         recip
     }
+
+    pub fn get_complex_unit() {}
 }
 
 impl ops::Mul for EngUnit {

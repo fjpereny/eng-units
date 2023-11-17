@@ -36,6 +36,17 @@ macro_rules! time {
     }};
 }
 
+#[macro_export]
+macro_rules! s {
+    ($value:expr) => {{
+        let mut unit = EngUnit::new();
+        unit.value = $value;
+        unit.time_count = 1;
+        unit.time_unit = TimeUnit::Second;
+        unit
+    }};
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum TimeUnit {
     Second,

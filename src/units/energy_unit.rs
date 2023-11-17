@@ -13,3 +13,25 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+#[macro_export]
+macro_rules! J {
+    ($value:expr) => {{
+        let mut unit = EngUnit::new();
+        unit.value = $value;
+        unit.mass_count = 1;
+        unit.length_count = 2;
+        unit.time_count = -2;
+        unit.mass_unit = MassUnit::Kilogram;
+        unit.length_unit = LengthUnit::Meter;
+        unit.time_unit = TimeUnit::Second;
+        unit
+    }};
+}
+
+#[macro_export]
+macro_rules! kJ {
+    ($value:literal) => {{
+        J! {($value * 1000.0)}
+    }};
+}
