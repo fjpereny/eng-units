@@ -175,7 +175,6 @@ pub fn extract_normal(unit: &EngUnit, complex: ComplexUnit) -> Option<EngUnit> {
     new_unit.temperature_count -= complex.temperature_count;
     new_unit.time_count -= complex.time_count;
 
-    new_unit.has_unit_string = true;
     new_unit
         .unit_string_numerator
         .push(complex.unit_string.to_string());
@@ -191,11 +190,10 @@ mod tests {
     #[test]
     fn test_1() {
         let u1 = kJ!(1.0);
-        let u1 = extract_normal(&u1, JOULE);
-        match u1 {
-            Some(unit) => println!("{unit}"),
-            None => (),
-        }
-        assert!(false)
+        let u2 = extract_normal(&u1, JOULE);
+        assert!(u2.is_some());
+        let u2 = u2.unwrap();
+        assert_eq!(1000.0, u2.value);
+        assert_eq!("1000.00 J", u2.to_string());
     }
 }

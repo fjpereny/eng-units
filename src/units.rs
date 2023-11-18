@@ -24,7 +24,6 @@ pub mod power_unit;
 pub mod temperature_unit;
 pub mod time_unit;
 
-use crate::complex_units::ComplexUnit;
 use crate::units::amount_of_substance_unit::AmountOfSubstanceUnit;
 use crate::units::electric_current_unit::ElectricCurrentUnit;
 use crate::units::length_unit::LengthUnit;
@@ -54,7 +53,6 @@ pub struct EngUnit {
     pub temperature_unit: TemperatureDeltaUnit,
     pub time_count: i32,
     pub time_unit: TimeUnit,
-    pub has_unit_string: bool,
     pub unit_string_numerator: Vec<String>,
     pub unit_string_denominator: Vec<String>,
 }
@@ -67,7 +65,7 @@ impl Default for EngUnit {
 
 impl Display for EngUnit {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if self.has_units() {
+        if self.has_units() || self.has_custom_untits() {
             write!(f, "{:.2} {}", self.value, self.unit_to_string())
         } else {
             write!(f, "{:.2}", self.value)
@@ -121,10 +119,13 @@ impl EngUnit {
             luminous_intensity_unit: LuminousIntensityUnit::None,
             amount_of_substance_count: 0,
             amount_of_substance_unit: AmountOfSubstanceUnit::None,
-            has_unit_string: false,
             unit_string_numerator: Vec::new(),
             unit_string_denominator: Vec::new(),
         }
+    }
+
+    fn has_custom_untits(&self) -> bool {
+        self.unit_string_numerator.len() > 0 || self.unit_string_denominator.len() > 0
     }
 
     fn to_amount_unit<
@@ -375,10 +376,8 @@ impl EngUnit {
         let mut s_numerator: Vec<String> = Vec::new();
         let mut s_denominator: Vec<String> = Vec::new();
 
-        if self.has_unit_string {
-            for s in &self.unit_string_numerator {
-                s_numerator.push(s.clone())
-            }
+        for s in &self.unit_string_numerator {
+            s_numerator.push(s.clone())
         }
 
         if self.amount_of_substance_count >= 2 {
@@ -448,10 +447,8 @@ impl EngUnit {
         }
 
         // String Denominator
-        if self.has_unit_string {
-            for s in &self.unit_string_denominator {
-                s_denominator.push(s.clone())
-            }
+        for s in &self.unit_string_denominator {
+            s_denominator.push(s.clone())
         }
         if self.amount_of_substance_count <= -2 {
             let s = format!(
