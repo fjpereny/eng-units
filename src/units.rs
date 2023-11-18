@@ -54,6 +54,9 @@ pub struct EngUnit {
     pub temperature_unit: TemperatureDeltaUnit,
     pub time_count: i32,
     pub time_unit: TimeUnit,
+    pub has_unit_string: bool,
+    pub unit_string_numerator: Vec<String>,
+    pub unit_string_denominator: Vec<String>,
 }
 
 impl Default for EngUnit {
@@ -118,6 +121,9 @@ impl EngUnit {
             luminous_intensity_unit: LuminousIntensityUnit::None,
             amount_of_substance_count: 0,
             amount_of_substance_unit: AmountOfSubstanceUnit::None,
+            has_unit_string: false,
+            unit_string_numerator: Vec::new(),
+            unit_string_denominator: Vec::new(),
         }
     }
 
@@ -369,6 +375,12 @@ impl EngUnit {
         let mut s_numerator: Vec<String> = Vec::new();
         let mut s_denominator: Vec<String> = Vec::new();
 
+        if self.has_unit_string {
+            for s in &self.unit_string_numerator {
+                s_numerator.push(s.clone())
+            }
+        }
+
         if self.amount_of_substance_count >= 2 {
             let s = format!(
                 "{}^{}",
@@ -436,6 +448,11 @@ impl EngUnit {
         }
 
         // String Denominator
+        if self.has_unit_string {
+            for s in &self.unit_string_denominator {
+                s_denominator.push(s.clone())
+            }
+        }
         if self.amount_of_substance_count <= -2 {
             let s = format!(
                 "{}^{}",

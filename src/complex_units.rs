@@ -80,7 +80,7 @@ pub const KILOJOULE: ComplexUnit = ComplexUnit {
     unit_string: "kJ",
 };
 
-pub fn can_extract_normal(unit: &EngUnit, complex: ComplexUnit) -> bool {
+pub fn can_extract_normal(unit: &EngUnit, complex: &ComplexUnit) -> bool {
     if complex.amount_of_substance_count > 0 {
         if unit.amount_of_substance_count < complex.amount_of_substance_count {
             return false;
@@ -153,7 +153,10 @@ pub fn can_extract_normal(unit: &EngUnit, complex: ComplexUnit) -> bool {
     true
 }
 
-pub fn extract_normal(unit: &EngUnit, complex: ComplexUnit) -> EngUnit {
+pub fn extract_normal(unit: &EngUnit, complex: ComplexUnit) -> Option<EngUnit> {
+    if !can_extract_normal(&unit, &complex) {
+        return None;
+    }
     let new_unit = unit.convert(complex.amount_of_substance_unit);
     let new_unit = new_unit.convert(complex.electric_current_unit);
     let new_unit = new_unit.convert(complex.length_unit);
@@ -171,32 +174,28 @@ pub fn extract_normal(unit: &EngUnit, complex: ComplexUnit) -> EngUnit {
     new_unit.mass_count -= complex.mass_count;
     new_unit.temperature_count -= complex.temperature_count;
     new_unit.time_count -= complex.time_count;
+
+    new_unit.has_unit_string = true;
     new_unit
+        .unit_string_numerator
+        .push(complex.unit_string.to_string());
+    Some(new_unit)
 }
 
-pub fn to_string_si(unit: &EngUnit) -> String {
-    let mut numerator_units = String::from("");
-    let mut denominator_units = String::from("");
+#[cfg(test)]
 
-    let mut unit = unit.clone();
-    if can_extract_normal(&unit, KILOJOULE) {
-        unit = extract_normal(&unit, KILOJOULE);
-        numerator_units += KILOJOULE.unit_string;
-    };
+mod tests {
+    use super::*;
+    use crate::*;
 
-    format!("{} {}", unit.value, numerator_units)
+    #[test]
+    fn test_1() {
+        let u1 = kJ!(1.0);
+        let u1 = extract_normal(&u1, JOULE);
+        match u1 {
+            Some(unit) => println!("{unit}"),
+            None => (),
+        }
+        assert!(false)
+    }
 }
-
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-//     use crate::*;
-
-//     #[test]
-//     fn test_1() {
-//         let u1 = kJ!(1.0);
-//         let s = to_string_si(&u1);
-//         println!("{s}");
-//         assert!(false)
-//     }
-// }
