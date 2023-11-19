@@ -23,6 +23,7 @@ use crate::units::temperature_unit::TemperatureDeltaUnit;
 use crate::units::time_unit::TimeUnit;
 use crate::EngUnit;
 
+#[derive(Debug, Clone, Copy)]
 pub struct ComplexUnit {
     pub prefix_multiplier: f64,
     pub amount_of_substance_count: i32,
@@ -40,6 +41,12 @@ pub struct ComplexUnit {
     pub time_count: i32,
     pub time_unit: TimeUnit,
     pub unit_string: &'static str,
+}
+
+impl ComplexUnit {
+    pub fn unit_to_string(&self) -> String {
+        self.unit_string.to_string()
+    }
 }
 
 pub const JOULE: ComplexUnit = ComplexUnit {
@@ -175,9 +182,7 @@ pub fn extract_normal(unit: &EngUnit, complex: ComplexUnit) -> Option<EngUnit> {
     new_unit.temperature_count -= complex.temperature_count;
     new_unit.time_count -= complex.time_count;
 
-    new_unit
-        .unit_string_numerator
-        .push(complex.unit_string.to_string());
+    new_unit.unit_numerator.push(complex.clone());
     Some(new_unit)
 }
 
@@ -195,5 +200,15 @@ mod tests {
         let u2 = u2.unwrap();
         assert_eq!(1000.0, u2.value);
         assert_eq!("1000.00 J", u2.to_string());
+    }
+
+    #[test]
+    fn test_2() {
+        let u1 = kJ!(1.0);
+        let u2 = extract_normal(&u1, KILOJOULE);
+        assert!(u2.is_some());
+        let u2 = u2.unwrap();
+        assert_eq!(1.0, u2.value);
+        assert_eq!("1.00 kJ", u2.to_string());
     }
 }

@@ -24,6 +24,7 @@ pub mod power_unit;
 pub mod temperature_unit;
 pub mod time_unit;
 
+use crate::complex_units::ComplexUnit;
 use crate::units::amount_of_substance_unit::AmountOfSubstanceUnit;
 use crate::units::electric_current_unit::ElectricCurrentUnit;
 use crate::units::length_unit::LengthUnit;
@@ -53,8 +54,8 @@ pub struct EngUnit {
     pub temperature_unit: TemperatureDeltaUnit,
     pub time_count: i32,
     pub time_unit: TimeUnit,
-    pub unit_string_numerator: Vec<String>,
-    pub unit_string_denominator: Vec<String>,
+    pub unit_numerator: Vec<ComplexUnit>,
+    pub unit_denominator: Vec<ComplexUnit>,
 }
 
 impl Default for EngUnit {
@@ -119,13 +120,13 @@ impl EngUnit {
             luminous_intensity_unit: LuminousIntensityUnit::None,
             amount_of_substance_count: 0,
             amount_of_substance_unit: AmountOfSubstanceUnit::None,
-            unit_string_numerator: Vec::new(),
-            unit_string_denominator: Vec::new(),
+            unit_numerator: Vec::new(),
+            unit_denominator: Vec::new(),
         }
     }
 
     fn has_custom_untits(&self) -> bool {
-        self.unit_string_numerator.len() > 0 || self.unit_string_denominator.len() > 0
+        self.unit_numerator.len() > 0 || self.unit_denominator.len() > 0
     }
 
     fn to_amount_unit<
@@ -376,8 +377,8 @@ impl EngUnit {
         let mut s_numerator: Vec<String> = Vec::new();
         let mut s_denominator: Vec<String> = Vec::new();
 
-        for s in &self.unit_string_numerator {
-            s_numerator.push(s.clone())
+        for u in &self.unit_numerator {
+            s_numerator.push(u.unit_to_string())
         }
 
         if self.amount_of_substance_count >= 2 {
@@ -447,8 +448,8 @@ impl EngUnit {
         }
 
         // String Denominator
-        for s in &self.unit_string_denominator {
-            s_denominator.push(s.clone())
+        for u in &self.unit_denominator {
+            s_denominator.push(u.unit_to_string())
         }
         if self.amount_of_substance_count <= -2 {
             let s = format!(

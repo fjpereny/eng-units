@@ -47,7 +47,7 @@ macro_rules! s {
     }};
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum TimeUnit {
     Second,
     Minute,

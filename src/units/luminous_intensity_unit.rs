@@ -22,7 +22,7 @@ use crate::units::MassUnit;
 use crate::units::TemperatureDeltaUnit;
 use crate::units::TimeUnit;
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum LuminousIntensityUnit {
     Candela,
     None,

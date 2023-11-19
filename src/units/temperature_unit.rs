@@ -36,7 +36,7 @@ macro_rules! temperature {
     }};
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum TemperatureDeltaUnit {
     C,
     R,

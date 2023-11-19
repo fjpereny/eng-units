@@ -59,7 +59,7 @@ macro_rules! mass_lb {
     }};
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum MassUnit {
     Kilogram,
     Pound,
