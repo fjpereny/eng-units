@@ -51,44 +51,6 @@ impl ComplexUnit {
     }
 }
 
-pub const JOULE: ComplexUnit = ComplexUnit {
-    prefix_multiplier: 1.0,
-    amount_of_substance_count: 0,
-    amount_of_substance_unit: AmountOfSubstanceUnit::None,
-    electric_current_count: 0,
-    electric_current_unit: ElectricCurrentUnit::None,
-    length_count: 2,
-    length_unit: LengthUnit::Meter,
-    luminous_intensity_count: 0,
-    luminous_intensity_unit: LuminousIntensityUnit::None,
-    mass_count: 1,
-    mass_unit: MassUnit::Kilogram,
-    temperature_count: 0,
-    temperature_unit: TemperatureDeltaUnit::None,
-    time_count: -2,
-    time_unit: TimeUnit::Second,
-    unit_string: "J",
-};
-
-pub const KILOJOULE: ComplexUnit = ComplexUnit {
-    prefix_multiplier: 1.0 / 1000.0,
-    amount_of_substance_count: 0,
-    amount_of_substance_unit: AmountOfSubstanceUnit::None,
-    electric_current_count: 0,
-    electric_current_unit: ElectricCurrentUnit::None,
-    length_count: 2,
-    length_unit: LengthUnit::Meter,
-    luminous_intensity_count: 0,
-    luminous_intensity_unit: LuminousIntensityUnit::None,
-    mass_count: 1,
-    mass_unit: MassUnit::Kilogram,
-    temperature_count: 0,
-    temperature_unit: TemperatureDeltaUnit::None,
-    time_count: -2,
-    time_unit: TimeUnit::Second,
-    unit_string: "kJ",
-};
-
 pub fn can_extract_normal(unit: &EngUnit, complex: &ComplexUnit) -> bool {
     if complex.amount_of_substance_count > 0 {
         if unit.amount_of_substance_count < complex.amount_of_substance_count {
@@ -186,31 +148,4 @@ pub fn extract_numerator(unit: &EngUnit, complex: ComplexUnit) -> Option<EngUnit
 
     new_unit.unit_numerator.push(complex.clone());
     Some(new_unit)
-}
-
-#[cfg(test)]
-
-mod tests {
-    use super::*;
-    use crate::*;
-
-    #[test]
-    fn test_1() {
-        let u1 = kJ!(1.0);
-        let u2 = extract_numerator(&u1, JOULE);
-        assert!(u2.is_some());
-        let u2 = u2.unwrap();
-        assert_eq!(1000.0, u2.value);
-        assert_eq!("1000.00 J", u2.to_string());
-    }
-
-    #[test]
-    fn test_2() {
-        let u1 = kJ!(1.0);
-        let u2 = extract_numerator(&u1, KILOJOULE);
-        assert!(u2.is_some());
-        let u2 = u2.unwrap();
-        assert_eq!(1.0, u2.value);
-        assert_eq!("1.00 kJ", u2.to_string());
-    }
 }

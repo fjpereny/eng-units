@@ -86,6 +86,7 @@ pub const KILOJOULE: ComplexUnit = ComplexUnit {
 #[cfg(test)]
 
 mod tests {
+    use super::*;
     use crate::complex_units::*;
 
     #[test]
