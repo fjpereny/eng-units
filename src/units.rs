@@ -16,11 +16,9 @@
 
 pub mod amount_of_substance_unit;
 pub mod electric_current_unit;
-pub mod energy_unit;
 pub mod length_unit;
 pub mod luminous_intensity_unit;
 pub mod mass_unit;
-pub mod power_unit;
 pub mod temperature_unit;
 pub mod time_unit;
 

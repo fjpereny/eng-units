@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+pub mod energy_unit;
+
 use crate::units::amount_of_substance_unit::AmountOfSubstanceUnit;
 use crate::units::electric_current_unit::ElectricCurrentUnit;
 use crate::units::length_unit::LengthUnit;
@@ -160,7 +162,7 @@ pub fn can_extract_normal(unit: &EngUnit, complex: &ComplexUnit) -> bool {
     true
 }
 
-pub fn extract_normal(unit: &EngUnit, complex: ComplexUnit) -> Option<EngUnit> {
+pub fn extract_numerator(unit: &EngUnit, complex: ComplexUnit) -> Option<EngUnit> {
     if !can_extract_normal(&unit, &complex) {
         return None;
     }
@@ -195,7 +197,7 @@ mod tests {
     #[test]
     fn test_1() {
         let u1 = kJ!(1.0);
-        let u2 = extract_normal(&u1, JOULE);
+        let u2 = extract_numerator(&u1, JOULE);
         assert!(u2.is_some());
         let u2 = u2.unwrap();
         assert_eq!(1000.0, u2.value);
@@ -205,7 +207,7 @@ mod tests {
     #[test]
     fn test_2() {
         let u1 = kJ!(1.0);
-        let u2 = extract_normal(&u1, KILOJOULE);
+        let u2 = extract_numerator(&u1, KILOJOULE);
         assert!(u2.is_some());
         let u2 = u2.unwrap();
         assert_eq!(1.0, u2.value);
