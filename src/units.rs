@@ -32,7 +32,8 @@ use crate::units::temperature_unit::TemperatureDeltaUnit;
 use crate::units::time_unit::TimeUnit;
 
 use std::cmp::Ordering;
-use std::fmt::Display;
+use std::collections::HashMap;
+use std::fmt::{format, Display};
 use std::ops;
 
 #[derive(Clone, Debug)]
@@ -347,6 +348,12 @@ impl EngUnit {
     }
 
     fn has_units(&self) -> bool {
+        if self.unit_numerator.len() != 0 {
+            return true;
+        }
+        if self.unit_denominator.len() != 0 {
+            return true;
+        }
         if self.length_count != 0 {
             return true;
         }
@@ -375,8 +382,23 @@ impl EngUnit {
         let mut s_numerator: Vec<String> = Vec::new();
         let mut s_denominator: Vec<String> = Vec::new();
 
-        for u in &self.unit_numerator {
-            s_numerator.push(u.unit_to_string())
+        if !self.unit_numerator.is_empty() {
+            let mut map: HashMap<&str, i32> = HashMap::new();
+            for u in &self.unit_numerator {
+                match map.get(u.unit_string) {
+                    None => map.insert(u.unit_string, 1),
+                    Some(val) => map.insert(u.unit_string, val + 1),
+                };
+            }
+            for (key, val) in map {
+                if val > 1 {
+                    let s = format!("{key}^{val}");
+                    s_numerator.push(s)
+                } else {
+                    let s = format!("{key}");
+                    s_numerator.push(s)
+                }
+            }
         }
 
         if self.amount_of_substance_count >= 2 {
@@ -637,17 +659,17 @@ impl EngUnit {
     }
 
     fn multiply_units(self, other: &EngUnit) -> EngUnit {
-        let mut new_unit = EngUnit::new();
-        new_unit.amount_of_substance_count =
-            self.amount_of_substance_count + other.amount_of_substance_count;
-        new_unit.electric_current_count =
-            self.electric_current_count + other.electric_current_count;
-        new_unit.length_count = self.length_count + other.length_count;
-        new_unit.luminous_intensity_count =
-            self.luminous_intensity_count + other.luminous_intensity_count;
-        new_unit.mass_count = self.mass_count + other.mass_count;
-        new_unit.temperature_count = self.temperature_count + other.temperature_count;
-        new_unit.time_count = self.time_count + other.time_count;
+        let mut new_unit = self.clone();
+        new_unit.amount_of_substance_count += other.amount_of_substance_count;
+        new_unit.electric_current_count += other.electric_current_count;
+        new_unit.length_count += other.length_count;
+        new_unit.luminous_intensity_count += other.luminous_intensity_count;
+        new_unit.mass_count += other.mass_count;
+        new_unit.temperature_count += other.temperature_count;
+        new_unit.time_count += other.time_count;
+        for complex in &other.unit_numerator {
+            new_unit.unit_numerator.push(*complex);
+        }
 
         let mut amount_conversion_factor = AmountOfSubstanceUnit::conversion_factor(
             &other.amount_of_substance_unit,
@@ -712,7 +734,7 @@ impl EngUnit {
             if self.amount_of_substance_count != 0 {
                 new_unit.amount_of_substance_unit = self.amount_of_substance_unit;
             } else {
-                new_unit.amount_of_substance_unit = other.amount_of_substance_unit.clone();
+                new_unit.amount_of_substance_unit = other.amount_of_substance_unit;
             }
         } else {
             new_unit.amount_of_substance_unit = AmountOfSubstanceUnit::None;
@@ -722,7 +744,7 @@ impl EngUnit {
             if self.electric_current_count != 0 {
                 new_unit.electric_current_unit = self.electric_current_unit;
             } else {
-                new_unit.electric_current_unit = other.electric_current_unit.clone();
+                new_unit.electric_current_unit = other.electric_current_unit;
             }
         } else {
             new_unit.electric_current_unit = ElectricCurrentUnit::None;
@@ -732,7 +754,7 @@ impl EngUnit {
             if self.length_count != 0 {
                 new_unit.length_unit = self.length_unit;
             } else {
-                new_unit.length_unit = other.length_unit.clone();
+                new_unit.length_unit = other.length_unit;
             }
         } else {
             new_unit.length_unit = LengthUnit::None;
@@ -742,7 +764,7 @@ impl EngUnit {
             if self.luminous_intensity_count != 0 {
                 new_unit.luminous_intensity_unit = self.luminous_intensity_unit;
             } else {
-                new_unit.luminous_intensity_unit = other.luminous_intensity_unit.clone();
+                new_unit.luminous_intensity_unit = other.luminous_intensity_unit;
             }
         } else {
             new_unit.luminous_intensity_unit = LuminousIntensityUnit::None;
@@ -752,7 +774,7 @@ impl EngUnit {
             if self.mass_count != 0 {
                 new_unit.mass_unit = self.mass_unit;
             } else {
-                new_unit.mass_unit = other.mass_unit.clone();
+                new_unit.mass_unit = other.mass_unit;
             }
         } else {
             new_unit.mass_unit = MassUnit::None;
@@ -762,7 +784,7 @@ impl EngUnit {
             if self.temperature_count != 0 {
                 new_unit.temperature_unit = self.temperature_unit;
             } else {
-                new_unit.temperature_unit = other.temperature_unit.clone();
+                new_unit.temperature_unit = other.temperature_unit;
             }
         } else {
             new_unit.temperature_unit = TemperatureDeltaUnit::None;
@@ -772,7 +794,7 @@ impl EngUnit {
             if self.time_count != 0 {
                 new_unit.time_unit = self.time_unit;
             } else {
-                new_unit.time_unit = other.time_unit.clone();
+                new_unit.time_unit = other.time_unit;
             }
         } else {
             new_unit.time_unit = TimeUnit::None;

@@ -97,27 +97,48 @@ mod tests {
     use super::*;
     use crate::complex_units::*;
 
-    #[test]
-    fn test_1() {
-        let u1 = kJ!(1.0);
-        assert_eq!(1.0, u1.value);
-        assert_eq!("1.00 kJ", u1.to_string());
-    }
+    mod kj {
+        use crate::temperature;
 
-    #[test]
-    fn test_2() {
-        let u1 = J!(1.0);
-        assert_eq!(1.0, u1.value);
-        assert_eq!("1.00 J", u1.to_string());
-    }
+        use super::*;
 
-    #[test]
-    fn test_3() {
-        let u1 = kJ!(1.0);
-        assert_eq!(1.0, u1.value);
-        assert_eq!("1.00 kJ", u1.to_string());
-        let u2 = u1.to_si_units();
-        assert_eq!(1000.0, u2.value);
-        assert_eq!("1000.00 kg·m^2/s^2", u2.to_string());
+        #[test]
+        fn creation() {
+            let u1 = kJ!(12.345);
+            assert_eq!(12.345, u1.value);
+            assert_eq!("12.35 kJ", u1.to_string());
+            let u2 = u1.to_si_units();
+            assert_eq!(12345.0, u2.value);
+            assert_eq!("12345.00 kg·m^2/s^2", u2.to_string());
+        }
+
+        #[test]
+        fn multiply_temp() {
+            let u1 = kJ!(12.345);
+            let u2 = temperature!(2.0, TemperatureDeltaUnit::K);
+            let u3 = u1 * u2;
+            assert_eq!(24.690, u3.value);
+            assert_eq!("24.69 kJ·K", u3.to_string());
+        }
+
+        #[test]
+        fn divide_temp() {
+            let u1 = kJ!(12.345);
+            let u2 = temperature!(10.0, TemperatureDeltaUnit::K);
+            let u3 = u1 / u2;
+            let expected = 1.2345;
+            let delta = (u3.value - expected).abs();
+            assert!(delta < 0.00001);
+            assert_eq!("1.23 kJ/K", u3.to_string());
+        }
+
+        #[test]
+        fn multiply_self() {
+            let u1 = kJ!(2.0);
+            let u2 = kJ!(3.0);
+            let u3 = u1 * u2;
+            assert_eq!(6.0, u3.value);
+            assert_eq!("6.00 kJ^2", u3.to_string());
+        }
     }
 }

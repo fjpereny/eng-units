@@ -125,7 +125,7 @@ pub fn can_pop_numerator(unit: &EngUnit, complex: &ComplexUnit) -> bool {
 }
 
 pub fn push_complex_numerator(unit: &EngUnit, complex: ComplexUnit) -> Option<EngUnit> {
-    if !can_pop_numerator(&unit, &complex) {
+    if !can_pop_numerator(unit, &complex) {
         return None;
     }
     let new_unit = unit.convert(complex.amount_of_substance_unit);
@@ -146,7 +146,7 @@ pub fn push_complex_numerator(unit: &EngUnit, complex: ComplexUnit) -> Option<En
     new_unit.temperature_count -= complex.temperature_count;
     new_unit.time_count -= complex.time_count;
 
-    new_unit.unit_numerator.push(complex.clone());
+    new_unit.unit_numerator.push(complex);
     Some(new_unit)
 }
 
