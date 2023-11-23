@@ -25,7 +25,7 @@ use crate::units::temperature_unit::TemperatureDeltaUnit;
 use crate::units::time_unit::TimeUnit;
 use crate::EngUnit;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ComplexUnit {
     pub prefix_multiplier: f64,
     pub amount_of_substance_count: i32,
@@ -51,7 +51,7 @@ impl ComplexUnit {
     }
 }
 
-pub fn can_extract_normal(unit: &EngUnit, complex: &ComplexUnit) -> bool {
+pub fn can_pop_numerator(unit: &EngUnit, complex: &ComplexUnit) -> bool {
     if complex.amount_of_substance_count > 0 {
         if unit.amount_of_substance_count < complex.amount_of_substance_count {
             return false;
@@ -124,8 +124,8 @@ pub fn can_extract_normal(unit: &EngUnit, complex: &ComplexUnit) -> bool {
     true
 }
 
-pub fn extract_numerator(unit: &EngUnit, complex: ComplexUnit) -> Option<EngUnit> {
-    if !can_extract_normal(&unit, &complex) {
+pub fn push_complex_numerator(unit: &EngUnit, complex: ComplexUnit) -> Option<EngUnit> {
+    if !can_pop_numerator(&unit, &complex) {
         return None;
     }
     let new_unit = unit.convert(complex.amount_of_substance_unit);
@@ -148,4 +148,31 @@ pub fn extract_numerator(unit: &EngUnit, complex: ComplexUnit) -> Option<EngUnit
 
     new_unit.unit_numerator.push(complex.clone());
     Some(new_unit)
+}
+
+pub fn pop_complex_numerator(unit: &EngUnit, complex: ComplexUnit) -> EngUnit {
+    let new_unit = unit.convert(complex.amount_of_substance_unit);
+    let new_unit = new_unit.convert(complex.electric_current_unit);
+    let new_unit = new_unit.convert(complex.length_unit);
+    let new_unit = new_unit.convert(complex.luminous_intensity_unit);
+    let new_unit = new_unit.convert(complex.mass_unit);
+    let new_unit = new_unit.convert(complex.temperature_unit);
+    let new_unit = new_unit.convert(complex.time_unit);
+
+    let mut new_unit = new_unit;
+    new_unit.value /= complex.prefix_multiplier;
+    new_unit.amount_of_substance_count += complex.amount_of_substance_count;
+    new_unit.electric_current_count += complex.electric_current_count;
+    new_unit.length_count += complex.length_count;
+    new_unit.luminous_intensity_count -= complex.luminous_intensity_count;
+    new_unit.mass_count += complex.mass_count;
+    new_unit.temperature_count += complex.temperature_count;
+    new_unit.time_count += complex.time_count;
+
+    let index = new_unit.unit_numerator.iter().position(|x| *x == complex);
+    if index.is_some() {
+        let index = index.unwrap();
+        new_unit.unit_numerator.remove(index);
+    }
+    new_unit
 }

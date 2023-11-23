@@ -34,14 +34,22 @@ macro_rules! J {
         unit.mass_unit = MassUnit::Kilogram;
         unit.length_unit = LengthUnit::Meter;
         unit.time_unit = TimeUnit::Second;
-        unit
+        push_complex_numerator(&unit, JOULE).unwrap()
     }};
 }
 
 #[macro_export]
 macro_rules! kJ {
-    ($value:literal) => {{
-        J! {($value * 1000.0)}
+    ($value:expr) => {{
+        let mut unit = EngUnit::new();
+        unit.value = $value / KILOJOULE.prefix_multiplier;
+        unit.mass_count = 1;
+        unit.length_count = 2;
+        unit.time_count = -2;
+        unit.mass_unit = MassUnit::Kilogram;
+        unit.length_unit = LengthUnit::Meter;
+        unit.time_unit = TimeUnit::Second;
+        push_complex_numerator(&unit, KILOJOULE).unwrap()
     }};
 }
 
@@ -92,20 +100,14 @@ mod tests {
     #[test]
     fn test_1() {
         let u1 = kJ!(1.0);
-        let u2 = extract_numerator(&u1, JOULE);
-        assert!(u2.is_some());
-        let u2 = u2.unwrap();
-        assert_eq!(1000.0, u2.value);
-        assert_eq!("1000.00 J", u2.to_string());
+        assert_eq!(1.0, u1.value);
+        assert_eq!("1.00 kJ", u1.to_string());
     }
 
     #[test]
     fn test_2() {
-        let u1 = kJ!(1.0);
-        let u2 = extract_numerator(&u1, KILOJOULE);
-        assert!(u2.is_some());
-        let u2 = u2.unwrap();
-        assert_eq!(1.0, u2.value);
-        assert_eq!("1.00 kJ", u2.to_string());
+        let u1 = J!(1.0);
+        assert_eq!(1.0, u1.value);
+        assert_eq!("1.00 J", u1.to_string());
     }
 }
