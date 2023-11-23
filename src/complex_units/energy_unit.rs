@@ -110,4 +110,14 @@ mod tests {
         assert_eq!(1.0, u1.value);
         assert_eq!("1.00 J", u1.to_string());
     }
+
+    #[test]
+    fn test_3() {
+        let u1 = kJ!(1.0);
+        assert_eq!(1.0, u1.value);
+        assert_eq!("1.00 kJ", u1.to_string());
+        let u2 = u1.to_si_units();
+        assert_eq!(1000.0, u2.value);
+        assert_eq!("1000.00 kg·m^2/s^2", u2.to_string());
+    }
 }

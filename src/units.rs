@@ -22,7 +22,7 @@ pub mod mass_unit;
 pub mod temperature_unit;
 pub mod time_unit;
 
-use crate::complex_units::ComplexUnit;
+use crate::complex_units::{pop_complex_numerator, ComplexUnit};
 use crate::units::amount_of_substance_unit::AmountOfSubstanceUnit;
 use crate::units::electric_current_unit::ElectricCurrentUnit;
 use crate::units::length_unit::LengthUnit;
@@ -798,7 +798,20 @@ impl EngUnit {
         recip
     }
 
-    pub fn get_complex_unit() {}
+    pub fn to_si_units(&self) -> EngUnit {
+        let mut new_unit = self.clone();
+        for complex in &self.unit_numerator {
+            new_unit = pop_complex_numerator(&new_unit, *complex);
+        }
+        new_unit = new_unit.convert(TimeUnit::Second);
+        new_unit = new_unit.convert(LengthUnit::Meter);
+        new_unit = new_unit.convert(MassUnit::Kilogram);
+        new_unit = new_unit.convert(ElectricCurrentUnit::Ampere);
+        new_unit = new_unit.convert(TemperatureDeltaUnit::K);
+        new_unit = new_unit.convert(AmountOfSubstanceUnit::Mol);
+        new_unit = new_unit.convert(LuminousIntensityUnit::Candela);
+        new_unit
+    }
 }
 
 impl ops::Mul for EngUnit {

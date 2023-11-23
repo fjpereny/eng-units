@@ -164,7 +164,7 @@ pub fn pop_complex_numerator(unit: &EngUnit, complex: ComplexUnit) -> EngUnit {
     new_unit.amount_of_substance_count += complex.amount_of_substance_count;
     new_unit.electric_current_count += complex.electric_current_count;
     new_unit.length_count += complex.length_count;
-    new_unit.luminous_intensity_count -= complex.luminous_intensity_count;
+    new_unit.luminous_intensity_count += complex.luminous_intensity_count;
     new_unit.mass_count += complex.mass_count;
     new_unit.temperature_count += complex.temperature_count;
     new_unit.time_count += complex.time_count;
