@@ -140,5 +140,12 @@ mod tests {
             assert_eq!(6.0, u3.value);
             assert_eq!("6.00 kJ^2", u3.to_string());
         }
+
+        #[test]
+        fn to_foot() {
+            let u1 = kJ!(1.0);
+            let u2 = u1.convert(LengthUnit::Foot);
+            assert_eq!("6.00 kJ^2", u2.to_string());
+        }
     }
 }
